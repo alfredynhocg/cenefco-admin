@@ -1,0 +1,38 @@
+<main>
+  <app-page-title title="Editar Tipo de Programa" subtitle="Tipos de Programa" />
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <div class="card">
+      <div class="card-header"><h4 class="card-title">Datos del Tipo de Programa</h4></div>
+      <div class="p-6">
+        @if (loading()) {
+          <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2"><div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div> Cargando...</div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-default-700 mb-1">Nombre <span class="text-danger">*</span></label>
+              <input type="text" formControlName="nombre_tipoprograma" class="form-input w-full">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-default-700 mb-1">Descripción</label>
+              <textarea formControlName="descripcion" rows="3" class="form-input w-full"></textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-default-700 mb-1">Orden</label>
+              <input type="number" formControlName="orden" class="form-input w-full" min="0">
+            </div>
+            <div class="flex items-center gap-2 pt-5">
+              <input type="checkbox" formControlName="activo" id="activo" class="form-checkbox">
+              <label for="activo" class="text-sm text-default-700">Activo</label>
+            </div>
+            <div class="md:col-span-2 flex items-center gap-3">
+              <button type="submit" class="btn bg-primary text-white" [disabled]="submitting()">
+                @if (submitting()) { <div class="size-4 me-2 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div> Guardando... } @else { Actualizar Tipo }
+              </button>
+              <a routerLink="/senefco/tipos-programa" class="btn bg-default-200 text-default-700">Cancelar</a>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</main>
