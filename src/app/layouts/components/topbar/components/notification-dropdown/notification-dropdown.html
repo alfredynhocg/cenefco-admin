@@ -1,0 +1,68 @@
+<div class="topbar-item hs-dropdown [--auto-close:inside] relative inline-flex">
+  <button
+    type="button"
+    class="hs-dropdown-toggle btn btn-icon size-8 hover:bg-default-150 rounded-full relative"
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-label="Notificaciones"
+    (click)="onOpen()"
+  >
+    <div class="size-4.5"><ng-icon name="tablerBellRinging"></ng-icon></div>
+    @if (notifService.unreadCount() > 0) {
+      <span class="absolute end-0 top-0 size-1.5 bg-primary/90 rounded-full"></span>
+    }
+  </button>
+
+  <div class="hs-dropdown-menu max-w-100 p-0" role="menu">
+    <!-- Header -->
+    <div class="p-4 border-b border-default-200">
+      <div class="flex items-center gap-2">
+        <h3 class="text-base text-default-800">Notificaciones</h3>
+        @if (notifService.unreadCount() > 0) {
+          <span class="size-5 font-semibold bg-orange-500 rounded text-white flex items-center justify-center text-xs">
+            {{ notifService.unreadCount() }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <ngx-simplebar class="h-80">
+      @if (notifService.notificaciones().length === 0) {
+        <div class="flex flex-col items-center justify-center h-full text-default-400 gap-2 p-6">
+          <div class="size-10"><ng-icon name="tablerBellOff"></ng-icon></div>
+          <p class="text-sm">Sin notificaciones aún</p>
+          <p class="text-xs text-center">Las nuevas ventas aparecerán aquí en tiempo real</p>
+        </div>
+      }
+
+      @for (venta of notifService.notificaciones(); track venta.id) {
+        <a [routerLink]="['/senefco/listado-ventas']" class="flex gap-3 p-4 items-start hover:bg-default-150 border-b border-default-100 last:border-0">
+          <div class="size-10 rounded-md bg-success/10 flex items-center justify-center shrink-0">
+            <div class="size-5 text-success"><ng-icon name="lucideShoppingBag"></ng-icon></div>
+          </div>
+
+          <div class="flex justify-between w-full gap-2 min-w-0">
+            <div class="min-w-0">
+              <h6 class="text-sm font-medium text-default-800 truncate">{{ venta.numero_venta }}</h6>
+              <p class="text-xs text-default-500 truncate">{{ venta.cliente }}</p>
+              <p class="text-xs font-semibold text-success mt-0.5">
+                Bs. {{ venta.total.toLocaleString('es-BO', { minimumFractionDigits: 2 }) }}
+              </p>
+            </div>
+            <div class="shrink-0 text-xs text-default-400">
+              {{ venta.fecha_venta }}
+            </div>
+          </div>
+        </a>
+      }
+    </ngx-simplebar>
+
+    <div class="flex items-center justify-between p-4 border-t border-default-200">
+      <span class="text-xs text-default-500">Actualización en tiempo real</span>
+      <a [routerLink]="['/senefco/listado-ventas']" class="btn btn-sm text-white bg-primary">
+        Ver ventas
+        <div class="size-4"><ng-icon name="lucideMoveRight"></ng-icon></div>
+      </a>
+    </div>
+  </div>
+</div>

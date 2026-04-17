@@ -1,0 +1,113 @@
+<main>
+  <app-page-title title="Detalle del Mensaje" subtitle="Mensajes de Contacto" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-24 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando mensaje...
+    </div>
+  } @else if (mensaje(); as m) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+
+      <!-- Datos del mensaje -->
+      <div class="lg:col-span-2 card">
+        <div class="card-header">
+          <h4 class="text-base font-semibold text-default-800">Mensaje recibido</h4>
+          <span
+            class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium capitalize"
+            [class]="estadoBadgeClass(m.estado)">
+            {{ m.estado }}
+          </span>
+        </div>
+        <div class="p-5 space-y-4">
+          <div>
+            <p class="text-xs text-default-400 mb-0.5">Asunto</p>
+            <p class="text-sm font-semibold text-default-800">{{ m.asunto }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-default-400 mb-0.5">Mensaje</p>
+            <p class="text-sm text-default-700 whitespace-pre-line leading-relaxed">{{ m.mensaje }}</p>
+          </div>
+
+          @if (m.respuesta) {
+            <div class="border-t border-default-200 pt-4">
+              <p class="text-xs text-default-400 mb-0.5">Respuesta enviada</p>
+              <p class="text-sm text-success whitespace-pre-line leading-relaxed">{{ m.respuesta }}</p>
+              <p class="text-xs text-default-400 mt-1">{{ m.respondido_at ? (m.respondido_at | slice:0:10) : '' }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Sidebar con datos del remitente -->
+      <div class="space-y-5">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="text-base font-semibold text-default-800">Remitente</h4>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center gap-2">
+              <div class="size-4 text-default-400"><ng-icon name="lucideUser"></ng-icon></div>
+              <span class="text-sm text-default-700">{{ m.nombre_remitente }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="size-4 text-default-400"><ng-icon name="lucideMail"></ng-icon></div>
+              <a [href]="'mailto:' + m.email_remitente" class="text-sm text-primary hover:underline">{{ m.email_remitente }}</a>
+            </div>
+            @if (m.telefono_remitente) {
+              <div class="flex items-center gap-2">
+                <div class="size-4 text-default-400"><ng-icon name="lucidePhone"></ng-icon></div>
+                <span class="text-sm text-default-700">{{ m.telefono_remitente }}</span>
+              </div>
+            }
+            <div class="flex items-center gap-2">
+              <div class="size-4 text-default-400"><ng-icon name="lucideCalendar"></ng-icon></div>
+              <span class="text-sm text-default-500">{{ m.created_at ? (m.created_at | slice:0:10) : '—' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de respuesta -->
+        <div class="card">
+          <div class="card-header">
+            <h4 class="text-base font-semibold text-default-800">Responder</h4>
+          </div>
+          <div class="p-5">
+            <form (ngSubmit)="onSubmit()">
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-default-700 mb-1">Respuesta</label>
+                <textarea
+                  class="form-input w-full"
+                  rows="6"
+                  placeholder="Escribe la respuesta al ciudadano..."
+                  [value]="respuesta()"
+                  (input)="respuesta.set($any($event.target).value)"
+                  required>
+                </textarea>
+              </div>
+              <div class="flex items-center justify-between gap-3">
+                <a routerLink="/senefco/mensajes-contacto" class="btn btn-sm bg-default-200 text-default-700">
+                  <div class="size-4 me-1"><ng-icon name="lucideArrowLeft"></ng-icon></div>
+                  Volver
+                </a>
+                <button
+                  type="submit"
+                  class="btn btn-sm bg-primary text-white"
+                  [disabled]="saving() || !respuesta().trim()">
+                  @if (saving()) {
+                    <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                    Enviando...
+                  } @else {
+                    <div class="size-4 me-1"><ng-icon name="lucideSend"></ng-icon></div>
+                    Enviar respuesta
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</main>

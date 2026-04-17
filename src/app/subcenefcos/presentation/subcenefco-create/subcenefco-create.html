@@ -1,0 +1,122 @@
+<main>
+  <app-page-title title="Nuevo SubCENEFCO" subtitle="Portal Institucional" />
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <!-- Columna principal -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Información del SubCENEFCO</h6></div>
+          <div class="card-body space-y-4">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Nombre <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-input" placeholder="Nombre del SubCENEFCO" formControlName="nombre">
+              @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Zona de Cobertura</label>
+              <input type="text" class="form-input" placeholder="Zona o área geográfica de cobertura" formControlName="zona_cobertura">
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Trámites Disponibles</label>
+              <textarea class="form-input" placeholder="Descripción de trámites que se pueden realizar" formControlName="tramites_disponibles" rows="3"></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Contacto y Ubicación</h6></div>
+          <div class="card-body space-y-4">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Dirección Física</label>
+              <input type="text" class="form-input" placeholder="Dirección del SubCENEFCO" formControlName="direccion_fisica">
+            </div>
+
+            <div class="grid sm:grid-cols-2 grid-cols-1 gap-4">
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Teléfono</label>
+                <input type="text" class="form-input" placeholder="Número de contacto" formControlName="telefono">
+              </div>
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Email</label>
+                <input type="email" class="form-input" placeholder="email@institucion.gob" formControlName="email">
+                @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Ingrese un email válido</p>
+                }
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 grid-cols-1 gap-4">
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Latitud</label>
+                <input type="number" class="form-input" placeholder="-17.3895" formControlName="latitud" step="0.000001">
+              </div>
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Longitud</label>
+                <input type="number" class="form-input" placeholder="-66.1568" formControlName="longitud" step="0.000001">
+              </div>
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">URL Imagen</label>
+              <input type="text" class="form-input" placeholder="https://..." formControlName="imagen_url">
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Columna lateral -->
+      <div class="space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Acciones</h6></div>
+          <div class="card-body flex flex-col gap-2">
+            <button
+              type="submit"
+              class="btn bg-primary text-white w-full"
+              [disabled]="form.invalid || submitting()"
+            >
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Crear SubCENEFCO
+              }
+            </button>
+            <a routerLink="/senefco/subcenefcos" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+              Cancelar
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Estado</h6></div>
+          <div class="card-body">
+            <div class="flex items-center gap-3">
+              <label class="text-sm font-medium text-default-800">Activo</label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" formControlName="activa">
+                <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                <span class="ms-2 text-sm text-default-600">{{ form.get('activa')?.value ? 'Sí' : 'No' }}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</main>

@@ -1,0 +1,154 @@
+<main>
+  <app-page-title title="Editar Trámite" subtitle="Catálogo de Trámites" />
+
+  @if (loadingTramite()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando trámite...
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Información General</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Nombre <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-input" placeholder="Nombre del trámite" formControlName="nombre">
+                @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido (máximo 300 caracteres)</p>
+                }
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+                <textarea class="form-input" placeholder="Descripción del trámite..." formControlName="descripcion" rows="3"></textarea>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Procedimiento</label>
+                <textarea class="form-input" placeholder="Pasos y procedimiento detallado..." formControlName="procedimiento" rows="6"></textarea>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Normativa Base</label>
+                <input type="text" class="form-input" placeholder="Ej: Ley N° 2341, Decreto..." formControlName="normativa_base">
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">URL del Formulario</label>
+                <input type="url" class="form-input" placeholder="https://..." formControlName="url_formulario">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Clasificación</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Tipo de Trámite <span class="text-danger">*</span>
+                </label>
+                <select class="form-input" formControlName="tipo_tramite_id">
+                  <option [value]="null">Seleccione un tipo...</option>
+                  @for (tipo of tiposTramite(); track tipo.id) {
+                    <option [value]="tipo.id">{{ tipo.nombre }}</option>
+                  }
+                </select>
+                @if (form.get('tipo_tramite_id')?.invalid && form.get('tipo_tramite_id')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Unidad Responsable <span class="text-danger">*</span>
+                </label>
+                <select class="form-input" formControlName="unidad_responsable_id">
+                  <option [value]="null">Seleccione una unidad...</option>
+                  @for (unidad of unidades(); track unidad.id) {
+                    <option [value]="unidad.id">{{ unidad.nombre }}</option>
+                  }
+                </select>
+                @if (form.get('unidad_responsable_id')?.invalid && form.get('unidad_responsable_id')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Modalidad</label>
+                <select class="form-input" formControlName="modalidad">
+                  <option value="presencial">Presencial</option>
+                  <option value="virtual">Virtual</option>
+                  <option value="semipresencial">Semipresencial</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Costo</label>
+                  <input type="number" min="0" step="0.01" class="form-input" placeholder="0.00" formControlName="costo">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Moneda</label>
+                  <select class="form-input" formControlName="moneda">
+                    <option value="BOB">BOB</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Días Hábiles de Resolución</label>
+                <input type="number" min="1" class="form-input" placeholder="Ej: 15" formControlName="dias_habiles_resolucion">
+              </div>
+
+              <div class="flex items-center gap-3">
+                <label class="text-sm font-medium text-default-800">Activo</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" formControlName="activo">
+                  <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                  <span class="ms-2 text-sm text-default-600">{{ form.get('activo')?.value ? 'Sí' : 'No' }}</span>
+                </label>
+              </div>
+
+              <div class="pt-2 flex flex-col gap-2">
+                <button
+                  type="submit"
+                  class="btn bg-primary text-white w-full"
+                  [disabled]="form.invalid || submitting()"
+                >
+                  @if (submitting()) {
+                    <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                    Guardando...
+                  } @else {
+                    Actualizar Trámite
+                  }
+                </button>
+                <a routerLink="/senefco/tramites" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+                  Cancelar
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  }
+</main>

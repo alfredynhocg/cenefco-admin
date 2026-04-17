@@ -1,0 +1,191 @@
+<main>
+  <app-page-title title="Detalle de Preinscripción" subtitle="Preinscripciones" />
+
+  @if (loadingItem()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando preinscripción...
+    </div>
+  } @else if (item()) {
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <div class="lg:col-span-2 space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Datos Personales</h6></div>
+          <div class="card-body">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              <div>
+                <dt class="text-default-500 font-medium">Nombre completo</dt>
+                <dd class="text-default-800 font-semibold">
+                  {{ item()!.nombre }} {{ item()!.apellido_paterno ?? '' }} {{ item()!.apellido_materno ?? '' }}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">CI / Expedido</dt>
+                <dd class="text-default-800">
+                  {{ item()!.ci ?? '—' }}
+                  @if (item()!.expedido_nombre) { <span class="text-default-500">{{ item()!.expedido_nombre }}</span> }
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Email</dt>
+                <dd class="text-default-800">{{ item()!.email }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Teléfono</dt>
+                <dd class="text-default-800">{{ item()!.telefono ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Ciudad</dt>
+                <dd class="text-default-800">{{ item()!.ciudad ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Provincia</dt>
+                <dd class="text-default-800">{{ item()!.provincia ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Grado académico</dt>
+                <dd class="text-default-800">
+                  @if (item()!.grado_academico_nombre) {
+                    {{ item()!.grado_abreviatura }} - {{ item()!.grado_academico_nombre }}
+                  } @else { — }
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Profesión</dt>
+                <dd class="text-default-800">{{ item()!.profesion ?? '—' }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Información del Programa</h6></div>
+          <div class="card-body">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              <div>
+                <dt class="text-default-500 font-medium">Programa ID</dt>
+                <dd class="text-default-800">{{ item()!.programa_id ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Medio de pago</dt>
+                <dd class="text-default-800">{{ item()!.medio_pago ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Monto pagado</dt>
+                <dd class="text-default-800">
+                  @if (item()!.monto_pagado != null) { Bs. {{ item()!.monto_pagado }} } @else { — }
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Origen</dt>
+                <dd class="text-default-800">{{ item()!.origen ?? '—' }}</dd>
+              </div>
+              <div class="sm:col-span-2">
+                <dt class="text-default-500 font-medium">Sugerencia de curso</dt>
+                <dd class="text-default-800">{{ item()!.sugerencia_curso ?? '—' }}</dd>
+              </div>
+              <div class="sm:col-span-2">
+                <dt class="text-default-500 font-medium">Mensaje</dt>
+                <dd class="text-default-800 whitespace-pre-line">{{ item()!.mensaje ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Recomendar docente</dt>
+                <dd>
+                  @if (item()!.recomendar_docente) {
+                    <span class="badge bg-success/10 text-success text-xs px-2 py-0.5 rounded-full">Sí</span>
+                  } @else {
+                    <span class="badge bg-default-200 text-default-600 text-xs px-2 py-0.5 rounded-full">No</span>
+                  }
+                </dd>
+              </div>
+              @if (item()!.detalle_docente) {
+                <div class="sm:col-span-2">
+                  <dt class="text-default-500 font-medium">Detalle docente</dt>
+                  <dd class="text-default-800">{{ item()!.detalle_docente }}</dd>
+                </div>
+              }
+            </dl>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Notificación</h6></div>
+          <div class="card-body">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              <div>
+                <dt class="text-default-500 font-medium">Notificado</dt>
+                <dd>
+                  @if (item()!.notificado) {
+                    <span class="badge bg-success/10 text-success text-xs px-2 py-0.5 rounded-full">Sí</span>
+                  } @else {
+                    <span class="badge bg-default-200 text-default-600 text-xs px-2 py-0.5 rounded-full">No</span>
+                  }
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Fecha notificación</dt>
+                <dd class="text-default-800">{{ item()!.fecha_notificacion ? (item()!.fecha_notificacion! | slice:0:10) : '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Fecha registro</dt>
+                <dd class="text-default-800">{{ item()!.created_at ? (item()!.created_at! | slice:0:10) : '—' }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Estado actual</h6></div>
+          <div class="card-body">
+            <span
+              class="inline-flex items-center py-1 px-3 rounded text-sm font-medium capitalize"
+              [class]="estadoBadgeClass(item()!.estado)">
+              {{ item()!.estado }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Cambiar Estado</h6></div>
+          <div class="card-body space-y-3">
+            <select class="form-input" [value]="estadoForm()" (change)="onEstadoChange($event)">
+              <option value="pendiente">Pendiente</option>
+              <option value="revisado">Revisado</option>
+              <option value="aceptado">Aceptado</option>
+              <option value="rechazado">Rechazado</option>
+              <option value="contactado">Contactado</option>
+            </select>
+            <button
+              type="button"
+              class="btn bg-primary text-white w-full"
+              [disabled]="submitting()"
+              (click)="guardarEstado()">
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Guardar Estado
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Acciones</h6></div>
+          <div class="card-body">
+            <a routerLink="/senefco/preinscripciones" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+              Volver al listado
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+</main>

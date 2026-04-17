@@ -1,0 +1,93 @@
+<main>
+  <app-page-title
+    [title]="'Archivos: ' + (galeriaNombre() || '...')"
+    subtitle="Gestión de Multimedia"
+  />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <div class="card">
+
+      <div class="card-header">
+        <p class="text-default-500 text-sm">
+          <b>{{ total }}</b> archivo{{ total !== 1 ? 's' : '' }} en esta galería
+        </p>
+
+        <div class="flex items-center gap-2">
+          <a routerLink="/senefco/galerias" class="btn btn-sm border border-default-300 text-default-600 hover:bg-default-100">
+            <div class="size-4 me-1"><ng-icon name="lucideArrowLeft"></ng-icon></div>
+            Volver
+          </a>
+
+          <label class="btn btn-sm bg-primary text-white cursor-pointer" [class.opacity-50]="uploading()">
+            @if (uploading()) {
+              <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+              Subiendo...
+            } @else {
+              <div class="size-4 me-1"><ng-icon name="lucideUpload"></ng-icon></div>
+              Subir Imágenes
+            }
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              class="hidden"
+              [disabled]="uploading()"
+              (change)="onFilesSelected($event)"
+            >
+          </label>
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        @if (isLoading) {
+          <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+            <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+            Cargando archivos...
+          </div>
+        } @else if (error) {
+          <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+            <div class="size-4"><ng-icon name="lucideCircleX"></ng-icon></div>
+            No se pudo cargar los archivos. Intente nuevamente.
+          </div>
+        } @else if (items.length === 0) {
+          <div class="flex flex-col items-center justify-center py-16 gap-3 text-default-400">
+            <div class="size-12"><ng-icon name="lucideImages"></ng-icon></div>
+            <p class="text-sm">Esta galería no tiene archivos aún.</p>
+            <label class="btn btn-sm bg-primary text-white cursor-pointer">
+              <div class="size-4 me-1"><ng-icon name="lucideUpload"></ng-icon></div>
+              Subir primera imagen
+              <input type="file" accept="image/*" multiple class="hidden" (change)="onFilesSelected($event)">
+            </label>
+          </div>
+        } @else {
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            @for (item of items; track item.id) {
+              <div class="relative group rounded-lg overflow-hidden border border-default-200 bg-default-50">
+                <img
+                  src="{{ item.url }}"
+                  alt="{{ item.titulo || 'imagen' }}"
+                  class="w-full h-32 object-cover"
+                >
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <button
+                    type="button"
+                    class="btn size-8 bg-danger text-white shadow"
+                    title="Eliminar"
+                    (click)="deleteItem(item.id)"
+                  >
+                    <div class="size-4"><ng-icon name="lucideTrash2"></ng-icon></div>
+                  </button>
+                </div>
+                @if (item.titulo) {
+                  <p class="px-2 py-1 text-xs text-default-600 truncate">{{ item.titulo }}</p>
+                }
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,261 @@
+<main>
+  <app-page-title title="Configuración del Sitio" subtitle="Portal Institucional" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando configuración...
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 space-y-5">
+
+          <!-- Identidad -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Identidad del Sitio</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Nombre del sitio <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-input" placeholder="Ej: Alcaldía Municipal de..." formControlName="nombre">
+                @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Slogan</label>
+                <input type="text" class="form-input" placeholder="Ej: Al servicio del pueblo" formControlName="slogan">
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+                <textarea class="form-input" placeholder="Descripción breve de la institución..." formControlName="descripcion" rows="3"></textarea>
+              </div>
+
+              <!-- Logo -->
+              <div class="grid sm:grid-cols-2 gap-5">
+
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Logo</label>
+                  @if (logoPreview()) {
+                    <div class="relative inline-flex items-start gap-3">
+                      <img [src]="logoPreview()" alt="Logo" class="h-16 rounded border border-default-200 object-contain bg-default-50 p-1">
+                      @if (uploadingLogo()) {
+                        <div class="size-4 animate-spin text-default-400 mt-1"><ng-icon name="lucideLoader"></ng-icon></div>
+                      } @else {
+                        <label class="btn btn-sm border border-default-300 text-default-600 hover:bg-default-100 cursor-pointer">
+                          <div class="size-4 me-1"><ng-icon name="lucideUpload"></ng-icon></div>
+                          Cambiar
+                          <input type="file" accept="image/*" class="hidden" (change)="onLogoSelected($event)">
+                        </label>
+                      }
+                    </div>
+                  } @else {
+                    <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                      <div class="flex flex-col items-center gap-1 text-default-400">
+                        <div class="size-7"><ng-icon name="lucideImagePlus"></ng-icon></div>
+                        <span class="text-xs font-medium">Subir logo</span>
+                        <span class="text-xs text-default-300">PNG, SVG — fondo transparente</span>
+                      </div>
+                      <input type="file" accept="image/*" class="hidden" (change)="onLogoSelected($event)">
+                    </label>
+                  }
+                </div>
+
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Favicon</label>
+                  @if (faviconPreview()) {
+                    <div class="relative inline-flex items-start gap-3">
+                      <img [src]="faviconPreview()" alt="Favicon" class="size-10 rounded border border-default-200 object-contain bg-default-50 p-1">
+                      @if (uploadingFavicon()) {
+                        <div class="size-4 animate-spin text-default-400 mt-1"><ng-icon name="lucideLoader"></ng-icon></div>
+                      } @else {
+                        <label class="btn btn-sm border border-default-300 text-default-600 hover:bg-default-100 cursor-pointer">
+                          <div class="size-4 me-1"><ng-icon name="lucideUpload"></ng-icon></div>
+                          Cambiar
+                          <input type="file" accept="image/png,image/x-icon,image/svg+xml" class="hidden" (change)="onFaviconSelected($event)">
+                        </label>
+                      }
+                    </div>
+                  } @else {
+                    <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                      <div class="flex flex-col items-center gap-1 text-default-400">
+                        <div class="size-7"><ng-icon name="lucideImagePlus"></ng-icon></div>
+                        <span class="text-xs font-medium">Subir favicon</span>
+                        <span class="text-xs text-default-300">ICO, PNG 32×32px</span>
+                      </div>
+                      <input type="file" accept="image/png,image/x-icon,image/svg+xml" class="hidden" (change)="onFaviconSelected($event)">
+                    </label>
+                  }
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Contacto -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Información de Contacto</h6></div>
+            <div class="card-body space-y-4">
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Email de contacto</label>
+                  <input type="email" class="form-input" placeholder="contacto@alcaldia.gob.bo" formControlName="email_contacto">
+                  @if (form.get('email_contacto')?.invalid && form.get('email_contacto')?.touched) {
+                    <p class="mt-1 text-danger text-xs">Ingrese un email válido</p>
+                  }
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Teléfono</label>
+                  <input type="text" class="form-input" placeholder="+591 2 000-0000" formControlName="telefono">
+                </div>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Dirección</label>
+                <input type="text" class="form-input" placeholder="Calle, N°, Edificio..." formControlName="direccion">
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Ciudad</label>
+                  <input type="text" class="form-input" placeholder="Ej: La Paz" formControlName="ciudad">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">País</label>
+                  <input type="text" class="form-input" placeholder="Bolivia" formControlName="pais">
+                </div>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Horario de atención</label>
+                <input type="text" class="form-input" placeholder="Ej: Lun–Vie 8:00–17:00" formControlName="horario_atencion">
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Latitud</label>
+                  <input type="number" step="any" class="form-input" placeholder="-16.5000" formControlName="latitud">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Longitud</label>
+                  <input type="number" step="any" class="form-input" placeholder="-68.1500" formControlName="longitud">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SEO -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">SEO Global</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Meta título</label>
+                <input type="text" class="form-input" placeholder="Título que aparece en buscadores" formControlName="meta_titulo">
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Meta descripción</label>
+                <textarea class="form-input" placeholder="Descripción para buscadores (máx. 160 caracteres)..." formControlName="meta_descripcion" rows="3"></textarea>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Palabras clave</label>
+                <input type="text" class="form-input" placeholder="alcaldía, municipio, gobierno local..." formControlName="meta_keywords">
+                <p class="mt-1 text-xs text-default-400">Separadas por comas</p>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">ID de Google Analytics</label>
+                <input type="text" class="form-input" placeholder="G-XXXXXXXXXX" formControlName="google_analytics_id">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Estado del Portal</h6></div>
+            <div class="card-body space-y-4">
+
+              <div class="flex items-center gap-3">
+                <label class="text-sm font-medium text-default-800">Portal activo</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" formControlName="activo">
+                  <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                  <span class="ms-2 text-sm text-default-600">{{ form.get('activo')?.value ? 'Sí' : 'No' }}</span>
+                </label>
+              </div>
+
+              <p class="text-xs text-default-400">
+                Si está desactivado, el portal público mostrará una página de mantenimiento.
+              </p>
+
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Acciones</h6></div>
+            <div class="card-body flex flex-col gap-2">
+              <button
+                type="submit"
+                class="btn bg-primary text-white w-full"
+                [disabled]="form.invalid || saving() || uploadingLogo() || uploadingFavicon()"
+              >
+                @if (saving()) {
+                  <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                  Guardando...
+                } @else {
+                  <div class="size-4 me-1"><ng-icon name="lucideSave"></ng-icon></div>
+                  Guardar Cambios
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumen -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Resumen</h6></div>
+            <div class="card-body space-y-3 text-sm">
+
+              <div class="flex items-center gap-2 text-default-600">
+                <div class="size-4 shrink-0"><ng-icon name="lucideGlobe"></ng-icon></div>
+                <span class="truncate">{{ form.get('nombre')?.value || '—' }}</span>
+              </div>
+
+              <div class="flex items-center gap-2 text-default-600">
+                <div class="size-4 shrink-0"><ng-icon name="lucideMail"></ng-icon></div>
+                <span class="truncate">{{ form.get('email_contacto')?.value || '—' }}</span>
+              </div>
+
+              <div class="flex items-center gap-2 text-default-600">
+                <div class="size-4 shrink-0"><ng-icon name="lucidePhone"></ng-icon></div>
+                <span>{{ form.get('telefono')?.value || '—' }}</span>
+              </div>
+
+              <div class="flex items-center gap-2 text-default-600">
+                <div class="size-4 shrink-0"><ng-icon name="lucideMapPin"></ng-icon></div>
+                <span class="truncate">{{ form.get('ciudad')?.value || '—' }}</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  }
+</main>

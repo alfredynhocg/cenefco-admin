@@ -1,0 +1,91 @@
+<main>
+  <app-page-title title="Sugerencias y Reclamos" subtitle="Comunicación" />
+
+  <div class="card">
+    <div class="card-header flex flex-wrap items-center gap-3">
+      <h6 class="card-title flex-1">Bandeja de Sugerencias y Reclamos</h6>
+      <div class="relative">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <div class="size-4 text-default-400"><ng-icon name="lucideSearch"></ng-icon></div>
+        </div>
+        <input type="text" class="form-input ps-9 w-64" placeholder="Buscar..." (input)="onSearch($event)">
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      @if (isLoading) {
+        <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+          <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+          Cargando sugerencias y reclamos...
+        </div>
+      } @else if (error) {
+        <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+          <ng-icon name="lucideAlertCircle"></ng-icon>
+          Error al cargar los registros
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="table w-full">
+            <thead>
+              <tr>
+                <th class="w-12">#</th>
+                <th>Asunto</th>
+                <th>Email de Respuesta</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th class="w-24">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (sug of sugerencias; track sug.id) {
+                <tr>
+                  <td class="text-default-400 text-sm">{{ sug.id }}</td>
+                  <td>
+                    <p class="font-medium text-default-800 truncate max-w-xs">{{ sug.asunto }}</p>
+                    @if (sug.mensaje) {
+                      <p class="text-xs text-default-400 truncate max-w-xs">{{ sug.mensaje | slice:0:60 }}...</p>
+                    }
+                  </td>
+                  <td class="text-default-500 text-sm">{{ sug.email_respuesta ?? '—' }}</td>
+                  <td>
+                    <span class="badge text-xs px-2 py-1 rounded-full" [class]="estadoClass(sug.estado)">
+                      {{ sug.estado | titlecase }}
+                    </span>
+                  </td>
+                  <td class="text-default-400 text-xs">{{ sug.created_at ? (sug.created_at | slice:0:10) : '—' }}</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <a [routerLink]="['/senefco/sugerencia-detail', sug.id]"
+                         class="size-8 flex items-center justify-center rounded hover:bg-primary/10 text-primary"
+                         title="Ver detalle">
+                        <div class="size-4"><ng-icon name="lucideEye"></ng-icon></div>
+                      </a>
+                      <button type="button"
+                              (click)="deleteSugerencia(sug.id)"
+                              class="size-8 flex items-center justify-center rounded hover:bg-danger/10 text-danger"
+                              title="Eliminar">
+                        <div class="size-4"><ng-icon name="lucideTrash2"></ng-icon></div>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="text-center py-10 text-default-400 text-sm">No se encontraron sugerencias o reclamos</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="p-4 border-t border-default-200">
+          <app-pagination
+            [total]="total"
+            [currentPage]="pageIndex()"
+            [pageSize]="pageSize()"
+            (pageChange)="onPageChange($event)"
+          />
+        </div>
+      }
+    </div>
+  </div>
+</main>

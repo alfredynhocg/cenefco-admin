@@ -1,0 +1,154 @@
+<main>
+  <app-page-title title="Detalle de Auditoría" subtitle="Sistema" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando registro...
+    </div>
+  } @else if (auditoria(); as a) {
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <!-- Columna principal -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <!-- Datos anteriores -->
+        @if (hasData(a.datos_anteriores)) {
+          <div class="card">
+            <div class="card-header">
+              <h6 class="card-title flex items-center gap-2">
+                <div class="size-4 text-warning"><ng-icon name="lucideHistory"></ng-icon></div>
+                Datos Anteriores
+              </h6>
+            </div>
+            <div class="card-body">
+              <pre class="text-xs text-default-700 bg-default-50 rounded-lg p-4 overflow-x-auto whitespace-pre-wrap break-all">{{ a.datos_anteriores | json }}</pre>
+            </div>
+          </div>
+        }
+
+        <!-- Datos nuevos -->
+        @if (hasData(a.datos_nuevos)) {
+          <div class="card">
+            <div class="card-header">
+              <h6 class="card-title flex items-center gap-2">
+                <div class="size-4 text-success"><ng-icon name="lucideCheckCircle"></ng-icon></div>
+                Datos Nuevos
+              </h6>
+            </div>
+            <div class="card-body">
+              <pre class="text-xs text-default-700 bg-default-50 rounded-lg p-4 overflow-x-auto whitespace-pre-wrap break-all">{{ a.datos_nuevos | json }}</pre>
+            </div>
+          </div>
+        }
+
+        @if (!hasData(a.datos_anteriores) && !hasData(a.datos_nuevos)) {
+          <div class="card">
+            <div class="card-body flex items-center justify-center py-10 text-default-400 text-sm gap-2">
+              <div class="size-4"><ng-icon name="lucideInfo"></ng-icon></div>
+              No hay datos de cambio registrados para esta acción.
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- Columna lateral -->
+      <div class="space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Información</h6></div>
+          <div class="card-body space-y-3">
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideHash"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">ID</p>
+                <p class="text-sm font-medium text-default-800">{{ a.id }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideClock"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">Fecha y hora</p>
+                <p class="text-sm font-medium text-default-800">{{ a.created_at }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideUser"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">Usuario</p>
+                <p class="text-sm font-medium text-default-800">{{ a.usuario_nombre || '—' }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideZap"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">Acción</p>
+                <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium capitalize" [class]="accionBadgeClass(a.accion)">
+                  {{ a.accion }}
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideFolder"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">Módulo</p>
+                <p class="text-sm font-medium text-default-800 capitalize">{{ a.modulo }}</p>
+              </div>
+            </div>
+
+            @if (a.modelo_id) {
+              <div class="flex items-start gap-2">
+                <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideLink"></ng-icon></div>
+                <div>
+                  <p class="text-xs text-default-400 mb-0.5">ID del registro</p>
+                  <p class="text-sm font-medium text-default-800">{{ a.modelo_id }}</p>
+                </div>
+              </div>
+            }
+
+            @if (a.descripcion) {
+              <div class="flex items-start gap-2">
+                <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideFileText"></ng-icon></div>
+                <div>
+                  <p class="text-xs text-default-400 mb-0.5">Descripción</p>
+                  <p class="text-sm text-default-700">{{ a.descripcion }}</p>
+                </div>
+              </div>
+            }
+
+            <div class="flex items-start gap-2">
+              <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideGlobe"></ng-icon></div>
+              <div>
+                <p class="text-xs text-default-400 mb-0.5">Dirección IP</p>
+                <p class="text-sm font-mono text-default-700">{{ a.ip_address || '—' }}</p>
+              </div>
+            </div>
+
+            @if (a.user_agent) {
+              <div class="flex items-start gap-2">
+                <div class="size-4 mt-0.5 text-default-400 shrink-0"><ng-icon name="lucideMonitor"></ng-icon></div>
+                <div>
+                  <p class="text-xs text-default-400 mb-0.5">User Agent</p>
+                  <p class="text-xs text-default-500 break-all">{{ a.user_agent }}</p>
+                </div>
+              </div>
+            }
+
+          </div>
+        </div>
+
+        <a routerLink="/senefco/auditorias" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+          <div class="size-4 me-1"><ng-icon name="lucideArrowLeft"></ng-icon></div>
+          Volver al listado
+        </a>
+
+      </div>
+    </div>
+  }
+</main>

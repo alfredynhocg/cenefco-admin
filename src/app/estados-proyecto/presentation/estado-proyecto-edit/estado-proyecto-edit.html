@@ -1,0 +1,165 @@
+<main>
+  <app-page-title title="Editar Estado de Proyecto" subtitle="Portal Institucional" />
+
+  @if (isLoading()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando proyecto...
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Datos del Proyecto</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Nombre del proyecto <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-input" placeholder="Ej: Construcción de la Cancha Multifuncional Zona Norte" formControlName="nombre">
+                @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Secretaría / Unidad</label>
+                  <input type="text" class="form-input" placeholder="Ej: Sec. de Obras Públicas" formControlName="secretaria">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Categoría</label>
+                  <input type="text" class="form-input" placeholder="Ej: Infraestructura, Salud, Educación" formControlName="categoria">
+                </div>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Ubicación</label>
+                <input type="text" class="form-input" placeholder="Ej: Barrio 24 de Junio, Zona Norte" formControlName="ubicacion">
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+                <textarea class="form-input" rows="4" placeholder="Descripción detallada del proyecto..." formControlName="descripcion"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Ejecución y Avance</h6></div>
+            <div class="card-body space-y-4">
+
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">
+                    Estado <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-input" formControlName="estado">
+                    @for (e of estados; track e.value) {
+                      <option [value]="e.value">{{ e.label }}</option>
+                    }
+                  </select>
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">
+                    Porcentaje de avance (%) <span class="text-danger">*</span>
+                  </label>
+                  <input type="number" class="form-input" placeholder="0" min="0" max="100" formControlName="porcentaje_avance">
+                  @if (form.get('porcentaje_avance')?.invalid && form.get('porcentaje_avance')?.touched) {
+                    <p class="mt-1 text-danger text-xs">Ingrese un valor entre 0 y 100</p>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Presupuesto (Bs.)</label>
+                <input type="number" class="form-input" placeholder="0.00" min="0" step="0.01" formControlName="presupuesto">
+              </div>
+
+              <div class="grid sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Fecha de inicio</label>
+                  <input type="date" class="form-input" formControlName="fecha_inicio">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Fin estimado</label>
+                  <input type="date" class="form-input" formControlName="fecha_fin_estimada">
+                </div>
+                <div>
+                  <label class="block mb-1.5 text-sm font-medium text-default-800">Fin real</label>
+                  <input type="date" class="form-input" formControlName="fecha_fin_real">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Imagen del proyecto</h6></div>
+            <div class="card-body">
+              @if (imgPreview()) {
+                <div class="relative mb-3">
+                  <img [src]="imgPreview()!" alt="preview" class="w-full h-40 object-cover rounded-lg">
+                  <button type="button" (click)="removeImg()"
+                    class="absolute top-2 right-2 btn size-7 bg-danger text-white p-0">
+                    <div class="size-3.5"><ng-icon name="lucideX"></ng-icon></div>
+                  </button>
+                </div>
+              }
+              <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                @if (uploadingImg()) {
+                  <div class="size-4 animate-spin text-primary"><ng-icon name="lucideLoader"></ng-icon></div>
+                  <span class="text-xs text-default-500 mt-1">Subiendo...</span>
+                } @else {
+                  <div class="size-5 text-default-400 mb-1"><ng-icon name="lucideUpload"></ng-icon></div>
+                  <span class="text-xs text-default-500">Cambiar imagen</span>
+                }
+                <input type="file" accept="image/*" class="hidden" (change)="onImgSelected($event)" [disabled]="uploadingImg()">
+              </label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Publicación</h6></div>
+            <div class="card-body">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="publicado" formControlName="publicado" class="form-checkbox">
+                <label for="publicado" class="text-sm text-default-700">Publicar en el portal</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <button
+              type="submit"
+              class="btn bg-primary text-white w-full"
+              [disabled]="form.invalid || submitting() || uploadingImg()"
+            >
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Guardar Cambios
+              }
+            </button>
+            <a routerLink="/senefco/estados-proyecto" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+              Cancelar
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  }
+</main>

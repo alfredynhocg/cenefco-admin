@@ -1,0 +1,212 @@
+<main>
+  <app-page-title title="Nueva Audiencia Pública" subtitle="Gestión de Audiencias Públicas" />
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+    <!-- Columna principal -->
+    <div class="lg:col-span-2 space-y-5">
+
+      <!-- Datos generales -->
+      <div class="card">
+        <div class="card-header"><h6 class="card-title">Datos Generales</h6></div>
+        <div class="card-body space-y-4">
+
+          <div>
+            <label class="block mb-1.5 text-sm font-medium text-default-800">
+              Título <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-input" placeholder="Título de la audiencia pública" formControlName="titulo">
+            @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+              <p class="mt-1 text-danger text-xs">Este campo es requerido (máximo 300 caracteres)</p>
+            }
+          </div>
+
+          <div>
+            <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+            <textarea class="form-input" placeholder="Descripción de la audiencia pública" formControlName="descripcion" rows="4"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Tipo</label>
+              <select class="form-input" formControlName="tipo">
+                <option value="inicial">Inicial</option>
+                <option value="seguimiento">Seguimiento</option>
+                <option value="cierre">Cierre</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Estado</label>
+              <select class="form-input" formControlName="estado">
+                <option value="convocada">Convocada</option>
+                <option value="realizada">Realizada</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Número de Asistentes</label>
+              <input type="number" class="form-input" placeholder="Cantidad de asistentes" formControlName="asistentes" min="0">
+            </div>
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">URL Video Grabado</label>
+              <input type="text" class="form-input" placeholder="https://youtube.com/..." formControlName="video_url">
+            </div>
+          </div>
+
+          <!-- Enlace virtual -->
+          <div>
+            <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Enlace de Conexión Virtual (Zoom / Meet)
+            </label>
+            <input type="text" class="form-input" placeholder="https://zoom.us/j/... o https://meet.google.com/..." formControlName="enlace_virtual">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Imágenes del evento -->
+      <div class="card">
+        <div class="card-header"><h6 class="card-title">Imágenes del Evento</h6></div>
+        <div class="card-body space-y-4">
+
+          <div>
+            <label class="block mb-1.5 text-sm font-medium text-default-800">Subir imágenes (puede seleccionar múltiples)</label>
+            <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:bg-default-50 transition-colors"
+                   [class.opacity-60]="uploadingImagen()">
+              <div class="flex flex-col items-center gap-1 text-default-500 text-sm">
+                @if (uploadingImagen()) {
+                  <div class="size-5 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                  <span>Subiendo...</span>
+                } @else {
+                  <ng-icon name="lucideImagePlus" class="size-6"></ng-icon>
+                  <span>Clic para seleccionar imágenes</span>
+                  <span class="text-xs text-default-400">JPG, PNG, WEBP — hasta 20MB c/u</span>
+                }
+              </div>
+              <input type="file" class="hidden" accept="image/*" multiple (change)="onImagenSelected($event)" [disabled]="uploadingImagen()">
+            </label>
+          </div>
+
+          @if (imagenesUrls().length > 0) {
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+              @for (url of imagenesUrls(); track url) {
+                <div class="relative group aspect-square rounded-lg overflow-hidden border border-default-200">
+                  <img src="{{ url }}" class="w-full h-full object-cover">
+                  <button type="button"
+                          (click)="removeImagen(url)"
+                          class="absolute top-1 right-1 size-6 bg-danger text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ng-icon name="lucideX" class="size-3.5"></ng-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Columna lateral -->
+    <div class="space-y-5">
+
+      <!-- Afiche -->
+      <div class="card">
+        <div class="card-header"><h6 class="card-title">Afiche / Invitación</h6></div>
+        <div class="card-body">
+          @if (afichePreview()) {
+            <div class="relative mb-3">
+              <img src="{{ afichePreview() }}" class="w-full rounded-lg object-cover max-h-64">
+              <button type="button" (click)="removeAfiche()"
+                      class="absolute top-2 right-2 size-7 bg-danger text-white rounded-full flex items-center justify-center shadow">
+                <ng-icon name="lucideX" class="size-4"></ng-icon>
+              </button>
+            </div>
+          }
+          <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:bg-default-50 transition-colors"
+                 [class.opacity-60]="uploadingAfiche()">
+            <div class="flex flex-col items-center gap-1 text-default-500 text-sm">
+              @if (uploadingAfiche()) {
+                <div class="size-5 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                <span>Subiendo...</span>
+              } @else {
+                <ng-icon name="lucideImage" class="size-5"></ng-icon>
+                <span>{{ afichePreview() ? 'Cambiar afiche' : 'Subir afiche' }}</span>
+              }
+            </div>
+            <input type="file" class="hidden" accept="image/*" (change)="onAficheSelected($event)" [disabled]="uploadingAfiche()">
+          </label>
+        </div>
+      </div>
+
+      <!-- Acta PDF -->
+      <div class="card">
+        <div class="card-header"><h6 class="card-title">Acta / Documento</h6></div>
+        <div class="card-body space-y-3">
+          @if (actaFileName()) {
+            <div class="flex items-center gap-2 p-3 bg-default-50 rounded-lg border border-default-200">
+              <ng-icon name="lucideFileText" class="size-5 text-danger flex-shrink-0"></ng-icon>
+              <span class="text-sm text-default-700 truncate flex-1">{{ actaFileName() }}</span>
+              <button type="button" (click)="removeActa()" class="text-default-400 hover:text-danger flex-shrink-0">
+                <ng-icon name="lucideX" class="size-4"></ng-icon>
+              </button>
+            </div>
+          }
+          <label class="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:bg-default-50 transition-colors"
+                 [class.opacity-60]="uploadingActa()">
+            <div class="flex flex-col items-center gap-1 text-default-500 text-sm">
+              @if (uploadingActa()) {
+                <div class="size-5 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                <span>Subiendo...</span>
+              } @else {
+                <ng-icon name="lucideUpload" class="size-5"></ng-icon>
+                <span>{{ actaFileName() ? 'Cambiar PDF' : 'Subir PDF del acta' }}</span>
+                <span class="text-xs text-default-400">PDF hasta 20MB</span>
+              }
+            </div>
+            <input type="file" class="hidden" accept=".pdf" (change)="onActaSelected($event)" [disabled]="uploadingActa()">
+          </label>
+        </div>
+      </div>
+
+      <!-- Visibilidad -->
+      <div class="card">
+        <div class="card-header"><h6 class="card-title">Visibilidad</h6></div>
+        <div class="card-body">
+          <div class="flex items-center gap-3">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" formControlName="activo">
+              <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+            <span class="text-sm font-medium text-default-800">
+              {{ form.get('activo')?.value ? 'Visible en el portal' : 'Oculto en el portal' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="card">
+        <div class="card-body flex flex-col gap-3">
+          <button type="submit" class="btn bg-primary text-white w-full"
+                  [disabled]="form.invalid || submitting() || uploadingAfiche() || uploadingActa() || uploadingImagen()">
+            @if (submitting()) {
+              <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+              Guardando...
+            } @else {
+              Crear Audiencia
+            }
+          </button>
+          <a routerLink="/senefco/audiencias-publicas" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+            Cancelar
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+</main>

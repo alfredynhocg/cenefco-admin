@@ -1,0 +1,156 @@
+<main>
+  <app-page-title title="Escala Salarial" subtitle="Portal Institucional" />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <div class="card">
+
+      <div class="card-header flex-wrap gap-3">
+        <div class="relative">
+          <input
+            type="text"
+            class="ps-11 form-input form-input-sm w-full sm:w-64"
+            placeholder="Buscar cargo, secretaría..."
+            (input)="onSearch($event)"
+          >
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3">
+            <div class="size-3.5 flex items-center text-default-500">
+              <ng-icon name="lucideSearch"></ng-icon>
+            </div>
+          </div>
+        </div>
+
+        <select class="form-input form-input-sm w-auto" (change)="onFiltroChange('anio', $event)">
+          <option value="">Todos los años</option>
+          @for (anio of anios; track anio) {
+            <option [value]="anio">{{ anio }}</option>
+          }
+        </select>
+
+        <select class="form-input form-input-sm w-auto" (change)="onFiltroChange('publicado', $event)">
+          <option value="">Todos</option>
+          <option value="1">Publicados</option>
+          <option value="0">Borradores</option>
+        </select>
+
+        <a routerLink="/senefco/escala-salarial-create" class="btn btn-sm bg-primary text-white ms-auto">
+          <div class="size-4 me-1"><ng-icon name="lucidePlus"></ng-icon></div>
+          Nuevo Registro
+        </a>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="overflow-x-auto">
+          <div class="min-w-full inline-block align-middle">
+            <div class="overflow-hidden">
+
+              @if (isLoading) {
+                <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+                  <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                  Cargando escala salarial...
+                </div>
+              } @else if (error) {
+                <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+                  <div class="size-4"><ng-icon name="lucideCircleX"></ng-icon></div>
+                  No se pudo cargar la lista. Intente nuevamente.
+                </div>
+              } @else {
+                <table class="min-w-full divide-y divide-default-200">
+                  <thead class="bg-default-150">
+                    <tr class="text-sm font-normal text-default-700">
+                      <th scope="col" class="px-3.5 py-3 text-start">Año</th>
+                      <th scope="col" class="px-3.5 py-3 text-start">Cargo</th>
+                      <th scope="col" class="px-3.5 py-3 text-start">Nivel / Cat.</th>
+                      <th scope="col" class="px-3.5 py-3 text-end">Salario Básico</th>
+                      <th scope="col" class="px-3.5 py-3 text-end">Bonos</th>
+                      <th scope="col" class="px-3.5 py-3 text-end">Total Ganado</th>
+                      <th scope="col" class="px-3.5 py-3 text-start">Estado</th>
+                      <th scope="col" class="px-3.5 py-3 text-start">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-default-200">
+
+                    @for (item of items; track item.id) {
+                      <tr class="text-default-800 font-normal">
+                        <td class="px-3.5 py-2.5 text-sm font-medium text-default-600">{{ item.anio }}</td>
+                        <td class="px-3.5 py-2.5">
+                          <p class="text-sm font-medium text-default-800">{{ item.cargo }}</p>
+                          @if (item.secretaria) {
+                            <p class="text-xs text-default-400">{{ item.secretaria }}</p>
+                          }
+                        </td>
+                        <td class="px-3.5 py-2.5 text-sm text-default-600">
+                          @if (item.nivel) {
+                            <span class="block">Nivel: {{ item.nivel }}</span>
+                          }
+                          @if (item.categoria) {
+                            <span class="block text-xs text-default-400">Cat. {{ item.categoria }}</span>
+                          }
+                          @if (!item.nivel && !item.categoria) {
+                            <span class="text-default-400">—</span>
+                          }
+                        </td>
+                        <td class="px-3.5 py-2.5 text-sm text-default-700 text-end whitespace-nowrap">
+                          Bs {{ item.salario_basico | number:'1.2-2' }}
+                        </td>
+                        <td class="px-3.5 py-2.5 text-sm text-default-600 text-end whitespace-nowrap">
+                          Bs {{ (item.bono_antiguedad + item.bono_produccion + item.otros_bonos) | number:'1.2-2' }}
+                        </td>
+                        <td class="px-3.5 py-2.5 text-sm font-semibold text-success text-end whitespace-nowrap">
+                          Bs {{ item.total_ganado | number:'1.2-2' }}
+                        </td>
+                        <td class="px-3.5 py-2.5">
+                          @if (item.publicado) {
+                            <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium bg-success/15 text-success">Publicado</span>
+                          } @else {
+                            <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium bg-warning/15 text-warning">Borrador</span>
+                          }
+                        </td>
+                        <td class="px-3.5 py-2.5">
+                          <div class="flex items-center gap-1.5">
+                            <a
+                              [routerLink]="['/senefco/escala-salarial-edit', item.id]"
+                              class="btn size-7.5 bg-default-200 hover:bg-primary text-default-500 hover:text-white"
+                              title="Editar">
+                              <div class="size-4"><ng-icon name="lucidePencil"></ng-icon></div>
+                            </a>
+                            <button
+                              type="button"
+                              class="btn size-7.5 bg-danger/10 hover:bg-danger text-danger hover:text-white"
+                              title="Eliminar"
+                              (click)="deleteItem(item.id)">
+                              <div class="size-4"><ng-icon name="lucideTrash2"></ng-icon></div>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+
+                    @empty {
+                      <tr>
+                        <td colspan="8" class="px-3.5 py-12 text-center text-sm text-default-400">
+                          No se encontraron registros de escala salarial.
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <p class="text-default-500 text-sm">
+            Mostrando <b>{{ items.length }}</b> de <b>{{ total }}</b> registros
+          </p>
+          <app-pagination
+            [total]="total"
+            [pageSize]="pageSize()"
+            [currentPage]="pageIndex()"
+            (pageChange)="onPageChange($event)"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

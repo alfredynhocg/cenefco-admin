@@ -1,0 +1,127 @@
+<main>
+  <app-page-title title="Editar Galería" subtitle="Gestión de Multimedia" />
+
+  <div class="grid grid-cols-1 gap-5">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="card-title">Editar Datos de la Galería</h6>
+      </div>
+
+      @if (loadingGaleria()) {
+        <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+          <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+          Cargando galería...
+        </div>
+      } @else {
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card-body space-y-5">
+
+          <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+
+            <!-- Portada -->
+            <div class="lg:col-span-2">
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Imagen de Portada</label>
+
+              @if (imgPreview()) {
+                <div class="relative inline-block">
+                  <img
+                    src="{{ imgPreview() }}"
+                    alt="Vista previa"
+                    class="h-40 w-full max-w-md rounded-lg object-cover border border-default-200"
+                  >
+                  @if (uploadingImg()) {
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg">
+                      <div class="size-5 animate-spin text-white"><ng-icon name="lucideLoader"></ng-icon></div>
+                    </div>
+                  } @else {
+                    <button
+                      type="button"
+                      (click)="removePortada()"
+                      class="absolute -top-2 -end-2 size-6 rounded-full bg-danger text-white flex items-center justify-center shadow"
+                      title="Quitar imagen"
+                    >
+                      <div class="size-3"><ng-icon name="lucideX"></ng-icon></div>
+                    </button>
+                  }
+                </div>
+              } @else {
+                <label
+                  class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
+                >
+                  <div class="flex flex-col items-center gap-2 text-default-400">
+                    <div class="size-8"><ng-icon name="lucideImagePlus"></ng-icon></div>
+                    <span class="text-xs">Haz clic para subir una portada (opcional)</span>
+                    <span class="text-xs text-default-300">PNG, JPG, WEBP — máx. 20 MB</span>
+                  </div>
+                  <input type="file" accept="image/*" class="hidden" (change)="onPortadaSelected($event)">
+                </label>
+              }
+            </div>
+
+            <!-- Título -->
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Título <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-input" placeholder="Título de la galería" formControlName="titulo" maxlength="200">
+              @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+                <p class="mt-1 text-danger text-xs">El título es obligatorio.</p>
+              }
+            </div>
+
+            <!-- Tipo -->
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Tipo</label>
+              <select class="form-select" formControlName="tipo">
+                <option value="fotos">Fotos</option>
+                <option value="videos">Videos</option>
+                <option value="mixto">Mixto</option>
+              </select>
+            </div>
+
+            <!-- Descripción -->
+            <div class="lg:col-span-2">
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+              <textarea class="form-input" placeholder="Descripción de la galería" formControlName="descripcion" rows="3"></textarea>
+            </div>
+
+            <!-- Orden -->
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Orden</label>
+              <input type="number" class="form-input" formControlName="orden" min="0">
+            </div>
+
+            <!-- Activo -->
+            <div class="flex items-center gap-3 pt-5">
+              <label class="text-sm font-medium text-default-800">Estado</label>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" class="sr-only peer" formControlName="activo">
+                <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                <span class="ms-2 text-sm text-default-600">{{ form.get('activo')?.value ? 'Activo' : 'Inactivo' }}</span>
+              </label>
+            </div>
+
+          </div>
+
+          <div class="flex items-center gap-3 pt-2">
+            <button
+              type="submit"
+              class="btn bg-primary text-white"
+              [disabled]="form.invalid || submitting() || uploadingImg()"
+            >
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Actualizar Galería
+              }
+            </button>
+            <a routerLink="/senefco/galerias" class="btn border border-default-300 text-default-600 hover:bg-default-100">
+              Cancelar
+            </a>
+          </div>
+
+        </form>
+      }
+    </div>
+  </div>
+</main>

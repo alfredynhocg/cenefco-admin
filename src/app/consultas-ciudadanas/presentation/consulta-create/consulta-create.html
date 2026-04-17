@@ -1,0 +1,126 @@
+<main>
+  <app-page-title title="Nueva Consulta Ciudadana" subtitle="Portal Institucional" />
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <!-- Columna principal -->
+      <div class="lg:col-span-2 space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Datos del Ciudadano</h6></div>
+          <div class="card-body space-y-4">
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Nombre completo <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-input" placeholder="Nombre y apellidos" formControlName="ciudadano_nombre">
+                @if (form.get('ciudadano_nombre')?.invalid && form.get('ciudadano_nombre')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">CI / DNI</label>
+                <input type="text" class="form-input" placeholder="Nro. de carnet de identidad" formControlName="ciudadano_ci">
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Email</label>
+                <input type="email" class="form-input" placeholder="correo@ejemplo.com" formControlName="ciudadano_email">
+                @if (form.get('ciudadano_email')?.invalid && form.get('ciudadano_email')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Ingrese un email válido</p>
+                }
+              </div>
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Teléfono</label>
+                <input type="text" class="form-input" placeholder="+591 7..." formControlName="ciudadano_telefono">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Detalle de la Consulta</h6></div>
+          <div class="card-body space-y-4">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Asunto <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-input" placeholder="Asunto principal de la consulta" formControlName="asunto">
+              @if (form.get('asunto')?.invalid && form.get('asunto')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Descripción <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-input" placeholder="Describa detalladamente su consulta..." formControlName="descripcion" rows="8"></textarea>
+              @if (form.get('descripcion')?.invalid && form.get('descripcion')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+              }
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Columna lateral -->
+      <div class="space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Clasificación</h6></div>
+          <div class="card-body space-y-4">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Tipo <span class="text-danger">*</span></label>
+              <select class="form-input" formControlName="tipo">
+                <option value="consulta">Consulta</option>
+                <option value="queja">Queja</option>
+                <option value="sugerencia">Sugerencia</option>
+                <option value="denuncia">Denuncia</option>
+                <option value="solicitud">Solicitud</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Estado inicial</label>
+              <select class="form-input" formControlName="estado">
+                <option value="pendiente">Pendiente</option>
+                <option value="en_proceso">En proceso</option>
+              </select>
+            </div>
+
+            <div class="pt-2 flex flex-col gap-2">
+              <button
+                type="submit"
+                class="btn bg-primary text-white w-full"
+                [disabled]="form.invalid || submitting()"
+              >
+                @if (submitting()) {
+                  <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                  Guardando...
+                } @else {
+                  Registrar Consulta
+                }
+              </button>
+              <a routerLink="/senefco/consultas-ciudadanas" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+                Cancelar
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</main>

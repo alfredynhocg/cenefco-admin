@@ -1,0 +1,142 @@
+<main>
+  <app-page-title title="Editar Entrada Histórica" subtitle="Portal Institucional" />
+
+  @if (loadingData()) {
+    <div class="flex items-center justify-center py-20 text-default-500 text-sm gap-2">
+      <div class="size-5 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando entrada...
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 gap-5 mb-5">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <!-- Columna principal -->
+          <div class="lg:col-span-2 flex flex-col gap-5">
+
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Información</h4>
+              </div>
+              <div class="p-5 flex flex-col gap-4">
+
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">
+                    Título <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" formControlName="titulo"
+                    class="form-input w-full"
+                    placeholder="Ej: Fundación del Municipio, Época Colonial...">
+                  @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+                    <p class="text-danger text-xs mt-1">El título es obligatorio</p>
+                  }
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-default-700 mb-1.5">Período — Desde</label>
+                    <input type="text" formControlName="fecha_inicio"
+                      class="form-input w-full"
+                      placeholder="Ej: 1825, Siglo XIX, 1825-08-06">
+                    <p class="text-xs text-default-400 mt-1">Año, fecha o descripción del inicio del período</p>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-default-700 mb-1.5">Período — Hasta</label>
+                    <input type="text" formControlName="fecha_fin"
+                      class="form-input w-full"
+                      placeholder="Ej: 1879, Actualidad, 1900">
+                    <p class="text-xs text-default-400 mt-1">Dejar vacío si es un hito puntual</p>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Contenido</label>
+                  <textarea formControlName="contenido" rows="14"
+                    class="form-input w-full"
+                    placeholder="Descripción detallada de este período o evento histórico..."></textarea>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Columna lateral -->
+          <div class="flex flex-col gap-5">
+
+            <!-- Imagen -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Imagen Ilustrativa</h4>
+              </div>
+              <div class="p-5 flex flex-col gap-3">
+                @if (form.get('imagen_url')?.value) {
+                  <div class="relative">
+                    <img [src]="form.get('imagen_url')?.value" alt="imagen"
+                      class="w-full aspect-video object-cover rounded-lg">
+                    <button type="button" (click)="removeImagen()"
+                      class="absolute top-2 right-2 btn size-7 bg-danger text-white rounded-full p-0 flex items-center justify-center">
+                      <div class="size-3.5"><ng-icon name="lucideX"></ng-icon></div>
+                    </button>
+                  </div>
+                } @else if (uploadingImagen()) {
+                  <div class="flex items-center justify-center h-32 bg-default-100 rounded-lg gap-2 text-default-500 text-sm">
+                    <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                    Subiendo imagen...
+                  </div>
+                } @else {
+                  <label class="flex flex-col items-center justify-center h-32 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                    <div class="size-8 text-default-400 mb-2"><ng-icon name="lucideImagePlus"></ng-icon></div>
+                    <span class="text-sm text-default-500">Subir imagen</span>
+                    <span class="text-xs text-default-400 mt-1">JPG, PNG, WEBP</span>
+                    <input type="file" accept="image/*" class="hidden" (change)="onImagenSelected($event)">
+                  </label>
+                }
+              </div>
+            </div>
+
+            <!-- Configuración -->
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Configuración</h4>
+              </div>
+              <div class="p-5 flex flex-col gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Orden</label>
+                  <input type="number" formControlName="orden" min="0"
+                    class="form-input w-full" placeholder="0">
+                </div>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <div class="relative">
+                    <input type="checkbox" formControlName="activo" class="sr-only peer">
+                    <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full transition-colors"></div>
+                    <div class="absolute top-0.5 left-0.5 size-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                  </div>
+                  <span class="text-sm font-medium text-default-700">Entrada activa</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex flex-col gap-2">
+              <button type="submit" class="btn bg-primary text-white w-full"
+                [disabled]="submitting() || uploadingImagen()">
+                @if (submitting()) {
+                  <div class="size-4 animate-spin me-2"><ng-icon name="lucideLoader"></ng-icon></div>
+                  Guardando...
+                } @else {
+                  <div class="size-4 me-2"><ng-icon name="lucideSave"></ng-icon></div>
+                  Guardar Cambios
+                }
+              </button>
+              <a routerLink="/senefco/historia-municipio" class="btn bg-default-200 text-default-600 w-full text-center">
+                Cancelar
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  }
+</main>

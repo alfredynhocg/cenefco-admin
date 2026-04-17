@@ -1,0 +1,151 @@
+<main>
+  <app-page-title title="Detalle de Reseña" subtitle="Reseñas" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando reseña...
+    </div>
+  } @else if (item()) {
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <div class="lg:col-span-2 space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Información de la Reseña</h6></div>
+          <div class="card-body space-y-4">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              <div>
+                <dt class="text-default-500 font-medium">Autor</dt>
+                <dd class="text-default-800 font-semibold">{{ item()!.nombre }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Cargo actual</dt>
+                <dd class="text-default-800">{{ item()!.cargo_actual ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Programa</dt>
+                <dd class="text-default-800">{{ item()!.nombre_programa ?? '—' }}</dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Calificación</dt>
+                <dd class="text-warning text-lg">
+                  @for (s of estrellas(item()!.calificacion); track s) { ★ }
+                  <span class="text-default-600 text-sm ms-1">({{ item()!.calificacion }}/5)</span>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-default-500 font-medium">Fecha</dt>
+                <dd class="text-default-800">{{ item()!.created_at ? (item()!.created_at! | slice:0:10) : '—' }}</dd>
+              </div>
+            </dl>
+
+            @if (item()!.titulo_resena) {
+              <div>
+                <p class="text-default-500 text-sm font-medium mb-1">Título</p>
+                <p class="text-default-800 font-semibold">{{ item()!.titulo_resena }}</p>
+              </div>
+            }
+
+            <div>
+              <p class="text-default-500 text-sm font-medium mb-1">Reseña</p>
+              <p class="text-default-800 whitespace-pre-line">{{ item()!.resena }}</p>
+            </div>
+
+            @if (item()!.motivo_rechazo) {
+              <div class="p-3 bg-danger/10 rounded">
+                <p class="text-danger text-sm font-medium mb-1">Motivo de rechazo</p>
+                <p class="text-default-800 text-sm">{{ item()!.motivo_rechazo }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <div class="space-y-5">
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Estado</h6></div>
+          <div class="card-body">
+            <span
+              class="inline-flex items-center py-1 px-3 rounded text-sm font-medium capitalize"
+              [class]="estadoBadgeClass(item()!.estado)">
+              {{ item()!.estado }}
+            </span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Moderación</h6></div>
+          <div class="card-body space-y-4">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Estado</label>
+              <select class="form-input" [value]="estadoForm()" (change)="onEstadoChange($event)">
+                <option value="pendiente">Pendiente</option>
+                <option value="aprobado">Aprobado</option>
+                <option value="rechazado">Rechazado</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="verificado"
+                class="form-checkbox"
+                [checked]="verificadoForm()"
+                (change)="verificadoForm.set($any($event.target).checked)">
+              <label for="verificado" class="text-sm font-medium text-default-800">Verificado</label>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="destacada"
+                class="form-checkbox"
+                [checked]="destacadaForm()"
+                (change)="destacadaForm.set($any($event.target).checked)">
+              <label for="destacada" class="text-sm font-medium text-default-800">Destacada</label>
+            </div>
+
+            @if (estadoForm() === 'rechazado') {
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Motivo de rechazo</label>
+                <textarea
+                  class="form-input"
+                  rows="3"
+                  placeholder="Explique el motivo de rechazo..."
+                  [value]="motivoRechazo()"
+                  (input)="motivoRechazo.set($any($event.target).value)"></textarea>
+              </div>
+            }
+
+            <button
+              type="button"
+              class="btn bg-primary text-white w-full"
+              [disabled]="submitting()"
+              (click)="guardar()">
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Guardar Cambios
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h6 class="card-title">Acciones</h6></div>
+          <div class="card-body">
+            <a routerLink="/senefco/resenas" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+              Volver al listado
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+</main>

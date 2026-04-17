@@ -1,0 +1,148 @@
+<main>
+  <app-page-title title="Editar Evento" subtitle="Gestión de Eventos" />
+
+  @if (loadingEvento()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando evento...
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 gap-5">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title">Datos del Evento</h6>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card-body space-y-5">
+
+          <div class="grid lg:grid-cols-2 grid-cols-1 gap-5">
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Tipo de Evento <span class="text-danger">*</span>
+              </label>
+              <select class="form-input" formControlName="tipo_evento_id">
+                <option [value]="null">Seleccione un tipo...</option>
+                @for (tipo of tiposEvento(); track tipo.id) {
+                  <option [value]="tipo.id">{{ tipo.nombre }}</option>
+                }
+              </select>
+              @if (form.get('tipo_evento_id')?.invalid && form.get('tipo_evento_id')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Título <span class="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Título del evento"
+                formControlName="titulo"
+              >
+              @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido (máximo 300 caracteres)</p>
+              }
+            </div>
+
+            <div class="lg:col-span-2">
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+              <textarea
+                class="form-input"
+                placeholder="Descripción del evento"
+                formControlName="descripcion"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Lugar</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Lugar del evento"
+                formControlName="lugar"
+              >
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">URL de Transmisión</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="https://..."
+                formControlName="url_transmision"
+              >
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">
+                Fecha Inicio <span class="text-danger">*</span>
+              </label>
+              <input type="date" class="form-input" formControlName="fecha_inicio">
+              @if (form.get('fecha_inicio')?.invalid && form.get('fecha_inicio')?.touched) {
+                <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Fecha Fin</label>
+              <input type="date" class="form-input" formControlName="fecha_fin">
+            </div>
+
+            <div>
+              <label class="block mb-1.5 text-sm font-medium text-default-800">Estado</label>
+              <select class="form-input" formControlName="estado">
+                <option value="programado">Programado</option>
+                <option value="en_curso">En Curso</option>
+                <option value="realizado">Realizado</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-8">
+              <div class="flex items-center gap-3">
+                <label class="text-sm font-medium text-default-800">Todo el día</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" formControlName="todo_el_dia">
+                  <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                </label>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <label class="text-sm font-medium text-default-800">Público</label>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" formControlName="publico">
+                  <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                  <span class="ms-2 text-sm text-default-600">{{ form.get('publico')?.value ? 'Sí' : 'No' }}</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="flex items-center gap-3 pt-2">
+            <button
+              type="submit"
+              class="btn bg-primary text-white"
+              [disabled]="form.invalid || submitting()"
+            >
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Actualizar Evento
+              }
+            </button>
+            <a routerLink="/senefco/eventos" class="btn border border-default-300 text-default-600 hover:bg-default-100">
+              Cancelar
+            </a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  }
+</main>

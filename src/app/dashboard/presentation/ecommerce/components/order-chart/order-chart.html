@@ -1,0 +1,40 @@
+<div class="card h-full">
+  <div class="card-header">
+    <h6 class="card-title">Trámites por Estado</h6>
+    <a routerLink="/senefco/tramite-solicitudes" class="btn btn-sm border-0 text-primary/90 hover:text-primary">
+      Ver todas
+      <div class="ms-1 size-4"><ng-icon name="lucideMoveRight"></ng-icon></div>
+    </a>
+  </div>
+
+  <div class="card-body flex flex-col">
+    @if (orderChartOptions) {
+      <app-apexchart [getOptions]="orderChartOptions" />
+    }
+
+    <div class="space-y-2.5 mt-2">
+      @for (entry of estadoEntries; track entry[0]) {
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="size-2.5 rounded-full shrink-0"
+                [style.backgroundColor]="getColor(entry[0])"></span>
+              <span class="text-xs font-medium text-default-600">{{ getLabel(entry[0]) }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-default-800">{{ entry[1] }}</span>
+              <span class="text-xs text-default-400">({{ getPct(entry[1]) }}%)</span>
+            </div>
+          </div>
+          <div class="h-1.5 rounded-full bg-default-100 overflow-hidden">
+            <div
+              class="h-full rounded-full transition-all duration-700 ease-out"
+              [style.width.%]="getPct(entry[1])"
+              [style.backgroundColor]="getColor(entry[0])"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="card">
+  <div class="card-header">
+    <h6 class="card-title">Últimas Solicitudes de Trámite</h6>
+    <a routerLink="/senefco/tramite-solicitudes" class="btn btn-sm border-0 text-primary/90 hover:text-primary">
+      Ver todas
+      <div class="ms-1 size-4"><ng-icon name="lucideMoveRight"></ng-icon></div>
+    </a>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="overflow-x-auto">
+      <div class="min-w-full inline-block align-middle">
+        <div class="overflow-hidden">
+          <table class="min-w-full divide-y divide-default-200">
+            <thead class="bg-default-150">
+              <tr class="text-sm font-normal text-default-500 whitespace-nowrap">
+                <th scope="col" class="px-3.5 py-3 text-start">#</th>
+                <th scope="col" class="px-3.5 py-3 text-start">N° Solicitud</th>
+                <th scope="col" class="px-3.5 py-3 text-start">Ciudadano</th>
+                <th scope="col" class="px-3.5 py-3 text-start">Tipo de Trámite</th>
+                <th scope="col" class="px-3.5 py-3 text-start">Fecha</th>
+                <th scope="col" class="px-3.5 py-3 text-start">Estado</th>
+                <th scope="col" class="px-3.5 py-3 text-start">Acción</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-default-200">
+              @for (solicitud of ultimasSolicitudes; track solicitud.id) {
+                <tr class="text-default-800 font-normal">
+                  <td class="px-3.5 py-2.5 whitespace-nowrap text-sm text-primary font-medium">{{ solicitud.id }}</td>
+                  <td class="px-3.5 py-2.5 whitespace-nowrap text-sm font-medium">{{ solicitud.numero }}</td>
+                  <td class="px-3.5 py-2.5 whitespace-nowrap text-sm">{{ solicitud.ciudadano }}</td>
+                  <td class="px-3.5 py-2.5 whitespace-nowrap text-sm">{{ solicitud.tipo_tramite }}</td>
+                  <td class="px-3.5 py-2.5 whitespace-nowrap text-sm">{{ solicitud.fecha }}</td>
+                  <td class="px-3.5 py-2.5 whitespace-nowrap">
+                    <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium border capitalize
+                      {{ estadoClasses(solicitud.estado).bg }}
+                      {{ estadoClasses(solicitud.estado).text }}
+                      {{ estadoClasses(solicitud.estado).border }}">
+                      {{ estadoLabel(solicitud.estado) }}
+                    </span>
+                  </td>
+                  <td class="px-3.5 py-2.5">
+                    <a [routerLink]="['/senefco/tramite-solicitud', solicitud.id]"
+                       class="btn size-7.5 bg-primary/10 hover:bg-primary text-primary hover:text-white"
+                       title="Ver detalle">
+                      <div class="size-4"><ng-icon name="lucideEye"></ng-icon></div>
+                    </a>
+                  </td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="7" class="px-3.5 py-10 text-center text-sm text-default-400">
+                    No hay solicitudes de trámite registradas aún.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

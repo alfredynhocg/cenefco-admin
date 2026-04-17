@@ -1,0 +1,23 @@
+<div class="card h-full">
+  <div class="card-header">
+    <h6 class="card-title">Accesos Rápidos</h6>
+  </div>
+
+  <div class="card-body">
+    <div class="grid grid-cols-2 gap-3">
+      @for (acceso of accesos; track acceso.ruta) {
+        <a [routerLink]="acceso.ruta"
+           class="flex items-center gap-3 p-3 rounded-xl hover:bg-default-100 transition-colors duration-150 group">
+          <div class="size-10 rounded-lg flex items-center justify-center shrink-0 {{ acceso.bgClass }} group-hover:scale-105 transition-transform">
+            <div class="size-5 {{ acceso.textClass }}">
+              <ng-icon [name]="acceso.icon"></ng-icon>
+            </div>
+          </div>
+          <span class="text-sm font-medium text-default-700 group-hover:text-default-900 truncate">
+            {{ acceso.label }}
+          </span>
+        </a>
+      }
+    </div>
+  </div>
+</div>

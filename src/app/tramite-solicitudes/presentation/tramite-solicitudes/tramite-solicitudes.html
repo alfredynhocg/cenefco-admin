@@ -1,0 +1,155 @@
+<main>
+  <app-page-title title="Seguimiento de Trámites" subtitle="Trámites" />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <div class="card">
+
+      <div class="card-header">
+        <select class="form-select form-input-sm w-44" (change)="onEstadoChange($event)">
+          <option value="">Todos los estados</option>
+          <option value="en_proceso">En proceso</option>
+          <option value="completado">Completado</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+
+        <div class="relative">
+          <input
+            type="text"
+            class="ps-11 form-input form-input-sm w-full sm:w-72"
+            placeholder="Buscar por número, nombre, CI o teléfono..."
+            (input)="onSearch($event)"
+          />
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3">
+            <div class="size-3.5 flex items-center text-default-500">
+              <ng-icon name="lucideSearch" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="overflow-x-auto">
+          <div class="min-w-full inline-block align-middle">
+            <div class="overflow-hidden">
+
+              @if (isLoading) {
+                <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+                  <div class="size-4 animate-spin"><ng-icon name="lucideLoader" /></div>
+                  Cargando solicitudes...
+                </div>
+              } @else if (hasError) {
+                <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+                  <div class="size-4"><ng-icon name="lucideCircleX" /></div>
+                  No se pudo cargar la lista. Intente nuevamente.
+                </div>
+              } @else {
+
+                <table class="min-w-full divide-y divide-default-200">
+                  <thead class="bg-default-150">
+                    <tr class="text-sm font-normal text-default-700">
+                      <th class="px-3.5 py-3 text-start">N° Seguimiento</th>
+                      <th class="px-3.5 py-3 text-start">Trámite</th>
+                      <th class="px-3.5 py-3 text-start">Ciudadano</th>
+                      <th class="px-3.5 py-3 text-start">Teléfono</th>
+                      <th class="px-3.5 py-3 text-start">Progreso</th>
+                      <th class="px-3.5 py-3 text-start">Estado</th>
+                      <th class="px-3.5 py-3 text-start">Fecha</th>
+                      <th class="px-3.5 py-3 text-start"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-default-200">
+
+                    @for (sol of solicitudes; track sol.id) {
+                      <tr class="text-default-800 font-normal">
+
+                        <td class="px-3.5 py-2.5">
+                          <span class="font-mono text-xs font-semibold text-primary">
+                            {{ sol.numero_seguimiento }}
+                          </span>
+                        </td>
+
+                        <td class="px-3.5 py-2.5 max-w-[200px]">
+                          <span class="text-sm line-clamp-2">{{ sol.tramite_nombre }}</span>
+                        </td>
+
+                        <td class="px-3.5 py-2.5">
+                          <p class="text-sm font-medium">{{ sol.nombre_ciudadano }}</p>
+                          @if (sol.ci) {
+                            <p class="text-xs text-default-500">CI: {{ sol.ci }}</p>
+                          }
+                        </td>
+
+                        <td class="px-3.5 py-2.5 text-sm text-default-600">
+                          {{ sol.phone }}
+                        </td>
+
+                        <td class="px-3.5 py-2.5">
+                          <div class="flex items-center gap-2 min-w-[110px]">
+                            <div class="flex-1 bg-default-200 rounded-full h-1.5">
+                              <div
+                                class="h-1.5 rounded-full transition-all {{ progresoColor(sol.estado) }}"
+                                [style.width]="progresoWidth(sol.etapa_actual)"
+                              ></div>
+                            </div>
+                            <span class="text-xs text-default-500 shrink-0">{{ sol.etapa_actual }}/6</span>
+                          </div>
+                        </td>
+
+                        <td class="px-3.5 py-2.5">
+                          <span
+                            class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium"
+                            [class]="estadoBadgeClass(sol.estado)"
+                          >
+                            {{ estadoLabel(sol.estado) }}
+                          </span>
+                        </td>
+
+                        <td class="px-3.5 py-2.5 text-sm text-default-500">
+                          {{ sol.created_at.slice(0, 10) }}
+                        </td>
+
+                        <td class="px-3.5 py-2.5">
+                          <a
+                            [routerLink]="['/senefco/tramite-solicitud', sol.id]"
+                            class="btn size-7.5 bg-default-200 hover:bg-primary text-default-500 hover:text-white"
+                            title="Ver detalle"
+                          >
+                            <div class="size-4"><ng-icon name="lucideEye" /></div>
+                          </a>
+                        </td>
+
+                      </tr>
+                    }
+
+                    @empty {
+                      <tr>
+                        <td colspan="8" class="px-3.5 py-12 text-center text-sm text-default-400">
+                          No se encontraron solicitudes.
+                        </td>
+                      </tr>
+                    }
+
+                  </tbody>
+                </table>
+
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <p class="text-default-500 text-sm">
+            Mostrando <b>{{ solicitudes.length }}</b> de <b>{{ total }}</b> solicitudes
+          </p>
+          <app-pagination
+            [total]="total"
+            [pageSize]="pageSize()"
+            [currentPage]="pageIndex()"
+            (pageChange)="onPageChange($event)"
+          />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>

@@ -1,0 +1,39 @@
+<div class="card h-full">
+  <div class="card-header">
+    <h6 class="card-title">Actividad de Hoy</h6>
+    <a routerLink="/senefco/tramite-solicitudes" class="btn btn-sm bg-primary text-white text-xs">
+      + Solicitud
+    </a>
+  </div>
+  <div class="card-body space-y-4">
+    <div class="flex items-center gap-3 p-3 rounded-lg bg-warning/5">
+      <div class="flex items-center justify-center rounded-lg size-11 bg-warning/10 shrink-0">
+        <div class="size-5 text-warning"><ng-icon name="lucideClipboardList"></ng-icon></div>
+      </div>
+      <div>
+        <p class="text-xs text-default-500 mb-0.5">Trámites pendientes</p>
+        <h5 class="font-bold text-default-800 text-base">{{ resumen?.tramites_pendientes || 0 }}</h5>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 rounded-lg bg-info/5">
+      <div class="flex items-center justify-center rounded-lg size-11 bg-info/10 shrink-0">
+        <div class="size-5 text-info"><ng-icon name="lucideMessageSquare"></ng-icon></div>
+      </div>
+      <div>
+        <p class="text-xs text-default-500 mb-0.5">Consultas nuevas</p>
+        <h5 class="font-bold text-default-800 text-base">{{ resumen?.consultas_nuevas || 0 }}</h5>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 rounded-lg bg-success/5">
+      <div class="flex items-center justify-center rounded-lg size-11 bg-success/10 shrink-0">
+        <div class="size-5 text-success"><ng-icon name="lucideCalendarDays"></ng-icon></div>
+      </div>
+      <div>
+        <p class="text-xs text-default-500 mb-0.5">Eventos próximos</p>
+        <h5 class="font-bold text-default-800 text-base">{{ resumen?.eventos_proximos || 0 }}</h5>
+      </div>
+    </div>
+  </div>
+</div>

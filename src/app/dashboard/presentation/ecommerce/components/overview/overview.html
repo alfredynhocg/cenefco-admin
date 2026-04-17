@@ -1,0 +1,20 @@
+<div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-2 gap-4">
+  @for (stat of stats; track $index) {
+    <div class="card hover:shadow-md transition-shadow duration-200">
+      <div class="card-body p-4">
+        <div class="flex items-start justify-between mb-3">
+          <div class="size-10 rounded-xl flex items-center justify-center {{ stat.bgClass }}">
+            <div class="size-5 {{ stat.textClass }}">
+              <ng-icon [name]="stat.icon"></ng-icon>
+            </div>
+          </div>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-md {{ stat.bgClass }} {{ stat.textClass }}">
+            {{ stat.badge }}
+          </span>
+        </div>
+        <h5 class="text-xl font-bold text-default-800 leading-tight truncate">{{ stat.value }}</h5>
+        <p class="text-xs text-default-500 mt-1 truncate">{{ stat.label }}</p>
+      </div>
+    </div>
+  }
+</div>

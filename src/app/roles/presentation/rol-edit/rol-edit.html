@@ -1,0 +1,113 @@
+<main>
+  <app-page-title title="Editar Rol" subtitle="Sistema" />
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-20 gap-2 text-default-400 text-sm">
+      <div class="size-5 animate-spin"><ng-icon name="lucideLoader" /></div>
+      Cargando rol...
+    </div>
+  } @else {
+    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+      <div class="card lg:col-span-1">
+        <div class="card-header">
+          <h6 class="card-title">Datos del Rol</h6>
+        </div>
+        <div class="card-body space-y-4">
+
+          @if (error()) {
+            <div class="rounded-md bg-danger/10 border border-danger/20 px-4 py-3 text-sm text-danger">
+              {{ error() }}
+            </div>
+          }
+
+          <div>
+            <label class="block text-sm font-medium text-default-800 mb-1.5">
+              Nombre <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-input" placeholder="Ej: Vendedor" [(ngModel)]="nombre" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-default-800 mb-1.5">Descripción</label>
+            <textarea
+              class="form-input resize-none"
+              rows="3"
+              placeholder="Descripción opcional del rol..."
+              [(ngModel)]="descripcion"
+            ></textarea>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" [(ngModel)]="activo" />
+              <div class="w-11 h-6 bg-default-200 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+            <span class="text-sm text-default-700">Rol activo</span>
+          </div>
+
+          <div class="pt-2 flex gap-3">
+            <button
+              class="btn bg-primary text-white flex-1"
+              (click)="guardar()"
+              [disabled]="saving()"
+            >
+              @if (saving()) {
+                <span class="size-4 animate-spin"><ng-icon name="lucideLoader" /></span>
+                Guardando...
+              } @else {
+                Guardar Cambios
+              }
+            </button>
+            <a routerLink="/senefco/roles" class="btn border border-default-200 text-default-600">
+              Cancelar
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card lg:col-span-2">
+        <div class="card-header">
+          <h6 class="card-title">Permisos</h6>
+          <p class="text-xs text-default-400 mt-0.5">Selecciona los permisos que tendrá este rol</p>
+        </div>
+        <div class="card-body space-y-5">
+          @for (grupo of grupos; track grupo.modulo) {
+            <div class="border border-default-200 rounded-lg overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-3 bg-default-50">
+                <div class="flex items-center gap-2">
+                  <div class="size-5 text-primary"><ng-icon [name]="grupo.icon" /></div>
+                  <span class="text-sm font-semibold text-default-800">{{ grupo.modulo }}</span>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    [checked]="grupoCompleto(grupoKeys(grupo))"
+                    (change)="toggleGrupo(grupoKeys(grupo))"
+                  />
+                  <span class="text-xs text-default-500">Todos</span>
+                </label>
+              </div>
+              <div class="grid sm:grid-cols-2 grid-cols-1 gap-0 divide-y divide-default-100">
+                @for (permiso of grupo.permisos; track permiso.key) {
+                  <label class="flex items-center gap-3 px-4 py-2.5 hover:bg-default-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      class="form-checkbox"
+                      [checked]="tienePermiso(permiso.key)"
+                      (change)="togglePermiso(permiso.key)"
+                    />
+                    <span class="text-sm text-default-700">{{ permiso.label }}</span>
+                    <span class="ml-auto text-xs text-default-400 font-mono">{{ permiso.key }}</span>
+                  </label>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  }
+</main>

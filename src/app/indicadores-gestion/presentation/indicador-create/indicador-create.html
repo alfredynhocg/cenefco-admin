@@ -1,0 +1,188 @@
+<main>
+  <app-page-title title="Nuevo Indicador de Gestión" subtitle="Portal Institucional" />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 flex flex-col gap-5">
+
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Información del Indicador</h4>
+            </div>
+            <div class="p-5 flex flex-col gap-4">
+
+              <div>
+                <label class="block text-sm font-medium text-default-700 mb-1.5">
+                  Nombre <span class="text-danger">*</span>
+                </label>
+                <input type="text" formControlName="nombre"
+                  class="form-input w-full"
+                  placeholder="Ej: Cobertura de agua potable, Tasa de alfabetización...">
+                @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+                  <p class="text-danger text-xs mt-1">El nombre es obligatorio</p>
+                }
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-default-700 mb-1.5">Descripción</label>
+                <textarea formControlName="descripcion" rows="3"
+                  class="form-input w-full"
+                  placeholder="Descripción del indicador, metodología de medición..."></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">
+                    Categoría <span class="text-danger">*</span>
+                  </label>
+                  <select formControlName="categoria" class="form-input w-full">
+                    @for (c of categorias; track c.value) {
+                      <option [value]="c.value">{{ c.label }}</option>
+                    }
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">
+                    Unidad de Medida <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" formControlName="unidad"
+                    class="form-input w-full" list="unidades-list"
+                    placeholder="%, N°, Bs, km...">
+                  <datalist id="unidades-list">
+                    @for (u of unidades; track u) {
+                      <option [value]="u">
+                    }
+                  </datalist>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Meta</label>
+                  <input type="number" formControlName="meta" step="any"
+                    class="form-input w-full" placeholder="Valor objetivo">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Valor Actual</label>
+                  <input type="number" formControlName="valor_actual" step="any"
+                    class="form-input w-full" placeholder="Valor medido">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Período</label>
+                  <input type="text" formControlName="periodo"
+                    class="form-input w-full"
+                    placeholder="Ej: 2024, Enero 2024, Trim. I 2024">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-default-700 mb-1.5">Fecha de Medición</label>
+                  <input type="date" formControlName="fecha_medicion"
+                    class="form-input w-full">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-default-700 mb-1.5">Responsable</label>
+                <input type="text" formControlName="responsable"
+                  class="form-input w-full"
+                  placeholder="Unidad o persona responsable">
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="flex flex-col gap-5">
+
+          <!-- Estado -->
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Estado del Indicador</h4>
+            </div>
+            <div class="p-5 flex flex-col gap-4">
+              <div>
+                <label class="block text-sm font-medium text-default-700 mb-1.5">
+                  Estado <span class="text-danger">*</span>
+                </label>
+                <select formControlName="estado" class="form-input w-full">
+                  @for (e of estados; track e.value) {
+                    <option [value]="e.value">{{ e.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="flex flex-col gap-3">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <div class="relative">
+                    <input type="checkbox" formControlName="publicado" class="sr-only peer">
+                    <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full transition-colors"></div>
+                    <div class="absolute top-0.5 left-0.5 size-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                  </div>
+                  <span class="text-sm font-medium text-default-700">Publicado</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <div class="relative">
+                    <input type="checkbox" formControlName="activo" class="sr-only peer">
+                    <div class="w-11 h-6 bg-default-200 peer-checked:bg-primary rounded-full transition-colors"></div>
+                    <div class="absolute top-0.5 left-0.5 size-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                  </div>
+                  <span class="text-sm font-medium text-default-700">Activo</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicador visual de estado -->
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Referencia de Estados</h4>
+            </div>
+            <div class="p-5 flex flex-col gap-2 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center py-0.5 px-2 rounded bg-success/15 text-success font-medium">En Meta</span>
+                <span class="text-default-500">El valor alcanza el objetivo</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center py-0.5 px-2 rounded bg-info/15 text-info font-medium">Por Encima</span>
+                <span class="text-default-500">Supera la meta establecida</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center py-0.5 px-2 rounded bg-danger/15 text-danger font-medium">Por Debajo</span>
+                <span class="text-default-500">No alcanza la meta</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center py-0.5 px-2 rounded bg-default-200 text-default-500 font-medium">Sin Dato</span>
+                <span class="text-default-500">Aún no se ha medido</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex flex-col gap-2">
+            <button type="submit" class="btn bg-primary text-white w-full"
+              [disabled]="submitting()">
+              @if (submitting()) {
+                <div class="size-4 animate-spin me-2"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                <div class="size-4 me-2"><ng-icon name="lucideSave"></ng-icon></div>
+                Guardar Indicador
+              }
+            </button>
+            <a routerLink="/senefco/indicadores-gestion" class="btn bg-default-200 text-default-600 w-full text-center">
+              Cancelar
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</main>

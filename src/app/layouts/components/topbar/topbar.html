@@ -1,0 +1,28 @@
+<div class="app-header min-h-topbar-height flex items-center sticky top-0  bg-(--topbar-background) border-b border-default-200">
+    <div class="w-full flex items-center justify-between px-6">
+        <div class="flex items-center gap-5">
+            <button (click)="toggleSidebar()" id="button-toggle-menu" class="btn btn-icon size-8 hover:bg-default-150 rounded">
+                <div class="text-xl size-5"> <ng-icon name="lucideAlignLeft"></ng-icon></div>
+            </button>
+
+
+            <div class="lg:flex hidden items-center relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div class="text-base size-4"><ng-icon name="tablerSearch"></ng-icon></div>
+                </div>
+
+                <input type="search" id="topbar-search" class="form-input px-12 text-sm rounded border-transparent focus:border-transparent w-60" placeholder="Search something...">
+
+                <button type="button" class="absolute inset-y-0 end-0 flex items-center pe-4">
+                    <span class="ms-auto font-medium">⌘ K</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <app-theme-toggler />
+            <app-notification-dropdown />
+            <app-user-profile />
+        </div>
+    </div>
+</div>

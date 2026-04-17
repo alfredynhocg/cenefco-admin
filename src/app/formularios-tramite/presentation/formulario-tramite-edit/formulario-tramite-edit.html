@@ -1,0 +1,140 @@
+<main>
+  <app-page-title title="Editar Formulario de Trámite" subtitle="Portal Institucional" />
+
+  @if (isLoading()) {
+    <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+      <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando formulario...
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
+
+        <!-- Columna principal -->
+        <div class="lg:col-span-2 space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Datos del Formulario</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">
+                  Título <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-input" placeholder="Ej: Formulario de Solicitud de Licencia de Construcción" formControlName="titulo">
+                @if (form.get('titulo')?.invalid && form.get('titulo')?.touched) {
+                  <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+                }
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Trámite asociado</label>
+                <select class="form-input" formControlName="tramite_id">
+                  <option [ngValue]="null">— Sin trámite asociado —</option>
+                  @for (t of tramites(); track t.id) {
+                    <option [ngValue]="t.id">{{ t.nombre }}</option>
+                  }
+                </select>
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Descripción</label>
+                <textarea class="form-input" rows="3"
+                  placeholder="Instrucciones o información adicional sobre el uso de este formulario..."
+                  formControlName="descripcion"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Archivo -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Archivo del Formulario</h6></div>
+            <div class="card-body">
+
+              @if (fileName()) {
+                <div class="flex items-center justify-between p-3 bg-default-100 rounded-lg mb-3">
+                  <div class="flex items-center gap-2 text-sm text-default-700 min-w-0">
+                    <div class="size-4 text-danger shrink-0"><ng-icon name="lucideFileText"></ng-icon></div>
+                    <span class="truncate">{{ fileName() }}</span>
+                  </div>
+                  <button type="button" (click)="removeFile()" class="btn size-6 bg-danger/10 text-danger hover:bg-danger hover:text-white ms-2 shrink-0">
+                    <div class="size-3"><ng-icon name="lucideX"></ng-icon></div>
+                  </button>
+                </div>
+              }
+
+              <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors"
+                [class.opacity-50]="uploadingFile()">
+                @if (uploadingFile()) {
+                  <div class="size-5 animate-spin text-primary"><ng-icon name="lucideLoader"></ng-icon></div>
+                  <span class="text-sm text-default-500 mt-2">Subiendo archivo...</span>
+                } @else {
+                  <div class="size-6 text-default-400 mb-2"><ng-icon name="lucideUpload"></ng-icon></div>
+                  <span class="text-sm text-default-600 font-medium">Reemplazar archivo</span>
+                  <span class="text-xs text-default-400 mt-1">PDF, DOC, DOCX, XLS, XLSX (máx. 20 MB)</span>
+                }
+                <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx" class="hidden" (change)="onFileSelected($event)" [disabled]="uploadingFile()">
+              </label>
+
+              @if (form.get('archivo_url')?.invalid && form.get('archivo_url')?.touched) {
+                <p class="mt-2 text-danger text-xs">Debe adjuntar un archivo</p>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna lateral -->
+        <div class="space-y-5">
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Opciones</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Versión</label>
+                <input type="text" class="form-input font-mono" placeholder="Ej: v1.0, 2025-A" formControlName="version">
+              </div>
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Orden</label>
+                <input type="number" class="form-input" formControlName="orden" min="0">
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="vigente" formControlName="vigente" class="form-checkbox">
+                <label for="vigente" class="text-sm text-default-700">Formulario vigente</label>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="publicado" formControlName="publicado" class="form-checkbox">
+                <label for="publicado" class="text-sm text-default-700">Publicar en el portal</label>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <button
+              type="submit"
+              class="btn bg-primary text-white w-full"
+              [disabled]="form.invalid || submitting() || uploadingFile()"
+            >
+              @if (submitting()) {
+                <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+                Guardando...
+              } @else {
+                Guardar Cambios
+              }
+            </button>
+            <a routerLink="/senefco/formularios-tramite" class="btn border border-default-300 text-default-600 hover:bg-default-100 w-full text-center">
+              Cancelar
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  }
+</main>

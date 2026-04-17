@@ -1,0 +1,54 @@
+<div class="card-body relative overflow-hidden rounded-md mb-5 bg-gradient-to-br from-zinc-900 to-zinc-800">
+  <div class="relative z-10 flex items-center justify-between gap-4 py-2">
+    <div>
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-medium text-primary/80 uppercase tracking-widest">Sistema de Gestión Municipal Achocalla</span>
+      </div>
+      <h5 class="text-xl font-bold text-white mb-2">Bienvenido al <span class="text-primary">Panel Administrativo</span> 🏛️</h5>
+      <p class="text-white/60 text-sm mb-4 max-w-md">
+        Gestiona comunicados, trámites, noticias, proyectos y más desde un solo lugar.
+        Transparencia, cercanía y eficiencia al servicio de la ciudadanía.
+      </p>
+      <div class="flex gap-3">
+        <a routerLink="/senefco/comunicado-create" class="btn bg-primary text-white text-sm">
+          + Comunicado
+        </a>
+        <a routerLink="/senefco/tramite-solicitudes" class="btn bg-white/10 text-white hover:bg-white/20 text-sm">
+          Ver Solicitudes
+        </a>
+      </div>
+    </div>
+    <div class="hidden lg:flex items-center gap-6 shrink-0">
+      <div class="text-center">
+        <a routerLink="/senefco/comunicados" class="block hover:opacity-80 transition-opacity">
+          <div class="flex items-center justify-center size-12 rounded-full bg-primary/20 mb-2 mx-auto">
+            <svg class="size-6 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.134-4.075m3.636 0v-.001a21.18 21.18 0 003.636 0m-3.636 0c.116.44.236.875.36 1.307M14.34 15.84a21.18 21.18 0 003.636 0m0 0c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.134-4.075m3.636 0v-.001"/>
+            </svg>
+          </div>
+          <p class="text-white/50 text-xs">Comunicados</p>
+        </a>
+      </div>
+      <div class="text-center">
+        <a routerLink="/senefco/noticias" class="block hover:opacity-80 transition-opacity">
+          <div class="flex items-center justify-center size-12 rounded-full bg-success/20 mb-2 mx-auto">
+            <svg class="size-6 text-success" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"/>
+            </svg>
+          </div>
+          <p class="text-white/50 text-xs">Noticias</p>
+        </a>
+      </div>
+      <div class="text-center">
+        <a routerLink="/senefco/tramite-solicitudes" class="block hover:opacity-80 transition-opacity">
+          <div class="flex items-center justify-center size-12 rounded-full bg-warning/20 mb-2 mx-auto">
+            <svg class="size-6 text-warning" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"/>
+            </svg>
+          </div>
+          <p class="text-white/50 text-xs">Solicitudes</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
