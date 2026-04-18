@@ -6,6 +6,8 @@ import { Usuarios }       from "../../usuarios/presentation/usuarios/usuarios";
 import { UsuarioCreate }  from "../../usuarios/presentation/usuario-create/usuario-create";
 import { UsuarioEdit }    from "../../usuarios/presentation/usuario-edit/usuario-edit";
 
+import { Asesores } from "../../asesores/presentation/asesores/asesores";
+
 import { WhatsappConversaciones } from "../../whatsapp/presentation/whatsapp-conversaciones/whatsapp-conversaciones";
 import { WhatsappMensajes }       from "../../whatsapp/presentation/whatsapp-mensajes/whatsapp-mensajes";
 import { WhatsappEnviar }         from "../../whatsapp/presentation/whatsapp-enviar/whatsapp-enviar";
@@ -122,6 +124,8 @@ import { TipoProgramaCreate }  from "../../tipos-programa/presentation/tipo-prog
 import { TipoProgramaEdit }    from "../../tipos-programa/presentation/tipo-programa-edit/tipo-programa-edit";
 
 export const ECOMMERCE_ROUTES: Routes = [
+  { path: 'senefco/asesores', component: Asesores, data: { title: 'Asesores' } },
+
   { path: 'senefco/whatsapp-conversaciones', component: WhatsappConversaciones, data: { title: 'Conversaciones WhatsApp' } },
   { path: 'senefco/whatsapp-mensajes/:id',   component: WhatsappMensajes,       data: { title: 'Mensajes WhatsApp' } },
   { path: 'senefco/whatsapp-enviar',         component: WhatsappEnviar,         data: { title: 'Enviar Mensaje WhatsApp' } },

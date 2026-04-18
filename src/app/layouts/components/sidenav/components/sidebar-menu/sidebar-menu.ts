@@ -92,6 +92,7 @@ export class SidebarMenu {
       icon: 'lucideMessageCircle',
       children: [
         { type: 'item', label: 'Conversaciones', icon: 'lucideMessageCircle', link: '/senefco/whatsapp-conversaciones' },
+        { type: 'item', label: 'Asesores',        icon: 'lucideUsers',          link: '/senefco/asesores' },
         { type: 'item', label: 'Enviar Mensaje',  icon: 'lucideSend',          link: '/senefco/whatsapp-enviar' },
         { type: 'item', label: 'Plantillas',      icon: 'lucideFileText',      link: '/senefco/whatsapp-plantillas' },
       ]

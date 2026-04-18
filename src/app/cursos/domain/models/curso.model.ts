@@ -13,6 +13,8 @@ export interface Curso {
   url_video:                string | null;
   url_whatsapp:             string | null;
   foto:                     string | null;
+  titulo_documento1:        string | null;
+  documento1:               string | null;
   imagen_banner_url:        string | null;
   imagen_alt:               string | null;
   inicio_actividades:       string | null;
@@ -57,6 +59,8 @@ export interface CreateCursoPayload {
   url_video?:               string | null;
   url_whatsapp?:            string | null;
   foto?:                    string | null;
+  titulo_documento1?:       string | null;
+  documento1?:              string | null;
   imagen_banner_url?:       string | null;
   imagen_alt?:              string | null;
   inicio_actividades?:      string | null;

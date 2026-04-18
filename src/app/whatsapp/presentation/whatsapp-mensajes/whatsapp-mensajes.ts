@@ -4,7 +4,9 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { FormsModule } from '@angular/forms';
 import { WhatsappService } from '../../../whatsapp/application/services/whatsapp.service';
-import { WhatsappMensaje } from '../../../whatsapp/domain/models/whatsapp.model';
+import { WhatsappAsesor, WhatsappMensaje } from '../../../whatsapp/domain/models/whatsapp.model';
+import { AsesorService } from '../../../asesores/application/services/asesor.service';
+import { Asesor } from '../../../asesores/domain/models/asesor.model';
 import { PageTitle } from '../../../common/components/page-title/page-title';
 import { ToastService } from '../../../common/application/services/toast.service';
 
@@ -15,9 +17,10 @@ import { ToastService } from '../../../common/application/services/toast.service
   styles: ``
 })
 export class WhatsappMensajes implements OnInit, OnDestroy {
-  private service = inject(WhatsappService);
-  private route   = inject(ActivatedRoute);
-  private toast   = inject(ToastService);
+  private service      = inject(WhatsappService);
+  private asesorService = inject(AsesorService);
+  private route        = inject(ActivatedRoute);
+  private toast        = inject(ToastService);
 
   mensajes       = signal<WhatsappMensaje[]>([]);
   loading        = signal(true);
@@ -31,6 +34,12 @@ export class WhatsappMensajes implements OnInit, OnDestroy {
   archivoAdjunto: File | null = null;
   captionAdjunto = '';
   tipoAdjunto: 'image' | 'document' = 'image';
+
+  asesor         = signal<WhatsappAsesor | null>(null);
+  asesoresDisp   = signal<Asesor[]>([]);
+  asesorSelId    = signal<number | null>(null);
+  asignando      = signal(false);
+  showAsesorPanel = signal(false);
 
   get esSoporte(): boolean { return this.estado === 'soporte'; }
 
@@ -54,6 +63,8 @@ export class WhatsappMensajes implements OnInit, OnDestroy {
         this.phone  = res.phone;
         this.nombre = res.nombre ?? '';
         this.estado = res.estado;
+        this.asesor.set(res.asesor ?? null);
+        this.asesorSelId.set(res.asesor_id ?? null);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),
@@ -65,6 +76,35 @@ export class WhatsappMensajes implements OnInit, OnDestroy {
       next: res => {
         this.mensajes.set(res.data);
         this.estado = res.estado;
+        this.asesor.set(res.asesor ?? null);
+        this.asesorSelId.set(res.asesor_id ?? null);
+      },
+    });
+  }
+
+  abrirPanelAsesor(): void {
+    this.showAsesorPanel.set(true);
+    if (this.asesoresDisp().length === 0) {
+      this.asesorService.getAll({ activo: true, pageSize: 50 }).subscribe({
+        next: res => this.asesoresDisp.set(res.data),
+      });
+    }
+  }
+
+  asignarAsesor(): void {
+    const id = this.asesorSelId();
+    if (!id) return;
+    this.asignando.set(true);
+    this.asesorService.asignarAConversacion(this.conversacionId, id).subscribe({
+      next: asesor => {
+        this.asesor.set(asesor as any);
+        this.showAsesorPanel.set(false);
+        this.asignando.set(false);
+        this.toast.success('Asesor asignado', `${asesor.nombre} quedó asignado a esta conversación.`);
+      },
+      error: () => {
+        this.toast.error('Error', 'No se pudo asignar el asesor.');
+        this.asignando.set(false);
       },
     });
   }

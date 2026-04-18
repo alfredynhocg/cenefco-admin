@@ -85,6 +85,13 @@
                             </a>
                             <button
                               type="button"
+                              class="btn size-7.5 bg-violet-100 hover:bg-violet-500 text-violet-600 hover:text-white"
+                              title="Generar QR"
+                              (click)="abrirQR(curso)">
+                              <div class="size-4"><ng-icon name="lucideQrCode"></ng-icon></div>
+                            </button>
+                            <button
+                              type="button"
                               class="btn size-7.5 bg-danger/10 hover:bg-danger text-danger hover:text-white"
                               title="Eliminar"
                               (click)="deleteCurso(curso.id_programa)">
@@ -124,3 +131,40 @@
     </div>
   </div>
 </main>
+
+@if (qrCurso()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4" (click)="cerrarQR()">
+    <div class="bg-white dark:bg-default-50 rounded-2xl shadow-2xl w-full max-w-sm p-6 flex flex-col items-center gap-4"
+         (click)="$event.stopPropagation()">
+
+      <div class="flex items-center justify-between w-full">
+        <h3 class="text-base font-semibold text-default-800 truncate pr-2">
+          {{ qrCurso()!.nombre_programa }}
+        </h3>
+        <button class="text-default-400 hover:text-default-600 shrink-0" (click)="cerrarQR()">
+          <ng-icon name="lucideX" class="size-5" />
+        </button>
+      </div>
+
+      @if (qrDataUrl()) {
+        <img [src]="qrDataUrl()!" alt="QR Code" class="rounded-xl border border-default-200 w-64 h-64" />
+      }
+
+      <p class="text-xs text-default-400 text-center">
+        Escanea el código para abrir la página del programa
+      </p>
+
+      <div class="flex gap-3 w-full">
+        <button class="btn btn-outline-default flex-1 gap-1.5" (click)="cerrarQR()">
+          <ng-icon name="lucideX" class="size-4" />
+          Cerrar
+        </button>
+        <button class="btn btn-primary flex-1 gap-1.5" (click)="descargarQR()">
+          <ng-icon name="lucideDownload" class="size-4" />
+          Descargar
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

@@ -1,0 +1,206 @@
+<main>
+  <app-page-title title="Asesores" subtitle="WhatsApp" />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+    <div class="card">
+
+      <div class="card-header">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="relative">
+            <input
+              type="text"
+              class="ps-11 form-input form-input-sm w-full sm:w-64"
+              placeholder="Buscar asesor..."
+              [value]="searchQuery()"
+              (input)="onSearch($any($event.target).value)"
+            >
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 text-default-500">
+              <ng-icon name="lucideSearch" class="size-3.5" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm gap-1.5" (click)="openCreate()">
+            <ng-icon name="lucidePlus" class="size-4" />
+            Nuevo Asesor
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="overflow-x-auto">
+          <div class="min-w-full inline-block align-middle">
+            <div class="overflow-hidden">
+
+              @if (loading()) {
+                <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+                  <ng-icon name="lucideLoader" class="size-4 animate-spin" />
+                  Cargando asesores...
+                </div>
+              } @else if (error()) {
+                <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+                  <ng-icon name="lucideCircleX" class="size-4" />
+                  No se pudo cargar la lista.
+                </div>
+              } @else if (asesores().length === 0) {
+                <div class="flex flex-col items-center justify-center py-16 text-default-400 gap-2">
+                  <ng-icon name="lucideUsers" class="size-10 mb-2" />
+                  <p class="text-sm font-medium">No hay asesores registrados</p>
+                  <button class="btn btn-outline-primary btn-sm mt-2" (click)="openCreate()">
+                    Agregar primer asesor
+                  </button>
+                </div>
+              } @else {
+                <table class="min-w-full divide-y divide-default-200">
+                  <thead class="bg-default-150">
+                    <tr class="text-sm font-normal text-default-700">
+                      <th class="px-3.5 py-3 text-start">#</th>
+                      <th class="px-3.5 py-3 text-start">Nombre</th>
+                      <th class="px-3.5 py-3 text-start">WhatsApp</th>
+                      <th class="px-3.5 py-3 text-start">Email</th>
+                      <th class="px-3.5 py-3 text-start">Especialidad</th>
+                      <th class="px-3.5 py-3 text-center">Disponible</th>
+                      <th class="px-3.5 py-3 text-center">Estado</th>
+                      <th class="px-3.5 py-3 text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-default-200">
+                    @for (a of asesores(); track a.id) {
+                      <tr class="text-default-800 font-normal hover:bg-default-50">
+                        <td class="px-3.5 py-2.5 text-sm text-primary font-medium">{{ a.id }}</td>
+                        <td class="px-3.5 py-2.5 text-sm font-medium">{{ a.nombre }}</td>
+                        <td class="px-3.5 py-2.5 text-sm">
+                          <a [href]="'https://wa.me/' + a.telefono.replace('+','')" target="_blank"
+                             class="text-success hover:underline flex items-center gap-1">
+                            <ng-icon name="lucidePhone" class="size-3.5" />
+                            {{ a.telefono }}
+                          </a>
+                        </td>
+                        <td class="px-3.5 py-2.5 text-sm text-default-600">{{ a.email ?? '—' }}</td>
+                        <td class="px-3.5 py-2.5 text-sm text-default-500">{{ a.especialidad ?? '—' }}</td>
+                        <td class="px-3.5 py-2.5 text-center">
+                          <button
+                            class="inline-flex items-center justify-center size-7 rounded-full transition-colors"
+                            [class]="a.disponible ? 'bg-success/15 text-success' : 'bg-default-200 text-default-400'"
+                            (click)="toggleDisponible(a)"
+                            [title]="a.disponible ? 'Disponible — clic para cambiar' : 'No disponible — clic para cambiar'">
+                            <ng-icon [name]="a.disponible ? 'lucideCircleCheck' : 'lucideCircle'" class="size-4" />
+                          </button>
+                        </td>
+                        <td class="px-3.5 py-2.5 text-center">
+                          <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium"
+                            [class]="a.activo ? 'bg-success/15 text-success' : 'bg-default-200 text-default-500'">
+                            {{ a.activo ? 'Activo' : 'Inactivo' }}
+                          </span>
+                        </td>
+                        <td class="px-3.5 py-2.5 text-center">
+                          <div class="flex items-center justify-center gap-1.5">
+                            <button class="btn btn-sm btn-outline-primary px-2 py-1" (click)="openEdit(a)">
+                              <ng-icon name="lucidePencil" class="size-3.5" />
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger px-2 py-1" (click)="confirmDelete(a)">
+                              <ng-icon name="lucideTrash2" class="size-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+                <div class="p-4 border-t border-default-200">
+                  <app-pagination
+                    [currentPage]="pageIndex()"
+                    [pageSize]="pageSize()"
+                    [total]="total()"
+                    (pageChange)="onPageChange($event)"
+                  />
+                </div>
+              }
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Modal formulario -->
+@if (showForm()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white dark:bg-default-50 rounded-xl shadow-xl w-full max-w-lg">
+
+      <div class="flex items-center justify-between px-6 py-4 border-b border-default-200">
+        <h3 class="text-base font-semibold text-default-800">
+          {{ editingAsesor() ? 'Editar Asesor' : 'Nuevo Asesor' }}
+        </h3>
+        <button class="text-default-400 hover:text-default-600" (click)="closeForm()">
+          <ng-icon name="lucideX" class="size-5" />
+        </button>
+      </div>
+
+      <div class="px-6 py-5 grid grid-cols-1 gap-4">
+
+        <div>
+          <label class="block text-sm font-medium text-default-700 mb-1">Nombre completo *</label>
+          <input type="text" class="form-input w-full"
+            [value]="formData().nombre"
+            (input)="updateField('nombre', $any($event.target).value)"
+            placeholder="Ej. María López">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-default-700 mb-1">Número WhatsApp *</label>
+          <input type="text" class="form-input w-full"
+            [value]="formData().telefono"
+            (input)="updateField('telefono', $any($event.target).value)"
+            placeholder="Ej. +59170000000">
+          <p class="text-xs text-default-400 mt-1">Incluir código de país. Este número recibirá las consultas.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-default-700 mb-1">Email</label>
+          <input type="email" class="form-input w-full"
+            [value]="formData().email"
+            (input)="updateField('email', $any($event.target).value)"
+            placeholder="asesor@cenefco.bo">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-default-700 mb-1">Especialidad</label>
+          <input type="text" class="form-input w-full"
+            [value]="formData().especialidad"
+            (input)="updateField('especialidad', $any($event.target).value)"
+            placeholder="Ej. Diplomados, Posgrados">
+        </div>
+
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="form-checkbox"
+              [checked]="formData().disponible"
+              (change)="updateField('disponible', $any($event.target).checked)">
+            <span class="text-sm text-default-700">Disponible para asignación</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="form-checkbox"
+              [checked]="formData().activo"
+              (change)="updateField('activo', $any($event.target).checked)">
+            <span class="text-sm text-default-700">Activo</span>
+          </label>
+        </div>
+
+      </div>
+
+      <div class="flex justify-end gap-3 px-6 py-4 border-t border-default-200">
+        <button class="btn btn-outline-default" (click)="closeForm()">Cancelar</button>
+        <button class="btn btn-primary gap-1.5" (click)="save()" [disabled]="saving()">
+          @if (saving()) {
+            <ng-icon name="lucideLoader" class="size-4 animate-spin" />
+          }
+          {{ editingAsesor() ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

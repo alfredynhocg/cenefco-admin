@@ -131,17 +131,11 @@ export class Login implements OnInit, OnDestroy {
   showPassword = signal(false);
 
   readonly fondos = [
-    'assets/images/fondos/9.jpg',
-    'assets/images/fondos/10.jpg',
-    'assets/images/fondos/11.jpg',
-    'assets/images/fondos/12.jpg',
-    'assets/images/fondos/13.jpg',
-    'assets/images/fondos/33.jpg',
-    'assets/images/fondos/36.jpg',
-    'assets/images/fondos/50.jpg',
-    'assets/images/fondos/53.jpg',
-    'assets/images/fondos/54.jpg',
-    'assets/images/fondos/55.jpg',
+    'assets/images/fondos/1.jpg',
+    'assets/images/fondos/2.jpg',
+    'assets/images/fondos/3.jpg',
+    'assets/images/fondos/4.jpg',
+    'assets/images/fondos/5.jpg',
   ];
   currentFondo = signal(0);
   private interval: ReturnType<typeof setInterval> | null = null;

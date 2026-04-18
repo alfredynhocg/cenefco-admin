@@ -25,8 +25,8 @@ export class WhatsappService {
     );
   }
 
-  getMensajes(conversacionId: number): Observable<{ data: WhatsappMensaje[]; phone: string; nombre: string | null; estado: string }> {
-    return this.http.get<{ data: WhatsappMensaje[]; phone: string; nombre: string | null; estado: string }>(
+  getMensajes(conversacionId: number): Observable<{ data: WhatsappMensaje[]; phone: string; nombre: string | null; estado: string; asesor_id: number | null; asesor: import('../../../whatsapp/domain/models/whatsapp.model').WhatsappAsesor | null }> {
+    return this.http.get<any>(
       `/api/v1/whatsapp/conversaciones/${conversacionId}/mensajes`
     );
   }

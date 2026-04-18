@@ -6,9 +6,10 @@ import { catchError, map, of, startWith, switchMap } from 'rxjs';
 import { Pagination } from '../../../common/components/pagination/pagination';
 import { PageTitle } from '../../../common/components/page-title/page-title';
 import { CursoService } from '../../application/services/curso.service';
-import { CursoListResponse } from '../../domain/models/curso.model';
+import { Curso, CursoListResponse } from '../../domain/models/curso.model';
 import { ToastService } from '../../../common/application/services/toast.service';
 import Swal from 'sweetalert2';
+import QRCode from 'qrcode';
 
 type ApiState =
   | { type: 'loading' }
@@ -58,6 +59,34 @@ export class Cursos {
   get total()     { const s = this.state(); return s.type === 'success' ? s.response.total : 0; }
   get isLoading() { return this.state().type === 'loading'; }
   get error()     { return this.state().type === 'error'; }
+
+  qrCurso   = signal<Curso | null>(null);
+  qrDataUrl = signal<string | null>(null);
+
+  async abrirQR(curso: Curso): Promise<void> {
+    const base = window.location.origin.replace('admin.', '').replace(':4200', '');
+    const url  = curso.slug
+      ? `${base}/programas/${curso.slug}`
+      : `${base}/programas`;
+    const dataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2, color: { dark: '#111827', light: '#ffffff' } });
+    this.qrCurso.set(curso);
+    this.qrDataUrl.set(dataUrl);
+  }
+
+  cerrarQR(): void {
+    this.qrCurso.set(null);
+    this.qrDataUrl.set(null);
+  }
+
+  descargarQR(): void {
+    const url = this.qrDataUrl();
+    const nombre = this.qrCurso()?.nombre_programa ?? 'qr';
+    if (!url) return;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `qr-${nombre.toLowerCase().replace(/\s+/g, '-')}.png`;
+    a.click();
+  }
 
   onSearch(event: Event): void {
     this.searchQuery.set((event.target as HTMLInputElement).value);
