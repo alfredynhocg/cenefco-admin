@@ -3,7 +3,6 @@
 
   <div class="grid grid-cols-1 gap-5 mb-5">
 
-    <!-- Loading State -->
     @if (loading()) {
       <div class="card">
         <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
@@ -15,7 +14,6 @@
       </div>
     }
 
-    <!-- Settings Form -->
     @else if (settings()) {
       <form (ngSubmit)="onSubmit()" #settingsForm="ngForm">
         <div class="card">
@@ -26,7 +24,6 @@
           <div class="p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-              <!-- Nombre del Sitio -->
               <div class="col-span-full">
                 <label for="site_name" class="block text-sm font-medium text-default-900 mb-2">
                   Nombre del Sitio
@@ -37,12 +34,11 @@
                   name="site_name"
                   [(ngModel)]="settings()!.site_name"
                   class="form-input"
-                  placeholder="Ej: Mi Sistema de Alcaldia"
+                  placeholder="Ej: Mi Sistema de cenefco"
                   required
                 >
               </div>
 
-              <!-- Email de Contacto -->
               <div class="col-span-full md:col-span-1">
                 <label for="contact_email" class="block text-sm font-medium text-default-900 mb-2">
                   Email de Contacto
@@ -58,7 +54,6 @@
                 >
               </div>
 
-              <!-- Items por Página -->
               <div class="col-span-full md:col-span-1">
                 <label for="items_per_page" class="block text-sm font-medium text-default-900 mb-2">
                   Items por Página
@@ -75,7 +70,6 @@
                 >
               </div>
 
-              <!-- Sitio Activo -->
               <div class="col-span-full md:col-span-1">
                 <label class="flex items-center gap-3 cursor-pointer">
                   <input
@@ -94,7 +88,6 @@
                 </p>
               </div>
 
-              <!-- Modo de Mantenimiento -->
               <div class="col-span-full md:col-span-1">
                 <label class="flex items-center gap-3 cursor-pointer">
                   <input
@@ -116,7 +109,6 @@
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="card-footer flex justify-end gap-3">
             <button
               type="button"
@@ -151,7 +143,6 @@
         </div>
       </form>
 
-      <!-- Info Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
         <div class="card">
           <div class="p-6">
@@ -215,7 +206,6 @@
       </div>
     }
 
-    <!-- Error State -->
     @else {
       <div class="card">
         <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">

@@ -72,7 +72,7 @@ src/
 ### Instalación
 
 ```bash
-cd admin_alcaldia
+cd admin_cenefco
 npm install
 ```
 

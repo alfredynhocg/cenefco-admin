@@ -10,10 +10,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
 
-        <!-- Columna principal -->
         <div class="lg:col-span-2 space-y-5">
-
-          <!-- Identidad -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Identidad del Sitio</h6></div>
             <div class="card-body space-y-4">
@@ -38,7 +35,6 @@
                 <textarea class="form-input" placeholder="Descripción breve de la institución..." formControlName="descripcion" rows="3"></textarea>
               </div>
 
-              <!-- Logo -->
               <div class="grid sm:grid-cols-2 gap-5">
 
                 <div>
@@ -99,7 +95,6 @@
             </div>
           </div>
 
-          <!-- Contacto -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Información de Contacto</h6></div>
             <div class="card-body space-y-4">
@@ -107,7 +102,7 @@
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block mb-1.5 text-sm font-medium text-default-800">Email de contacto</label>
-                  <input type="email" class="form-input" placeholder="contacto@alcaldia.gob.bo" formControlName="email_contacto">
+                  <input type="email" class="form-input" placeholder="contacto@cenefco.gob.bo" formControlName="email_contacto">
                   @if (form.get('email_contacto')?.invalid && form.get('email_contacto')?.touched) {
                     <p class="mt-1 text-danger text-xs">Ingrese un email válido</p>
                   }
@@ -153,7 +148,6 @@
             </div>
           </div>
 
-          <!-- SEO -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">SEO Global</h6></div>
             <div class="card-body space-y-4">
@@ -184,7 +178,6 @@
 
         </div>
 
-        <!-- Columna lateral -->
         <div class="space-y-5">
 
           <div class="card">
@@ -226,7 +219,6 @@
             </div>
           </div>
 
-          <!-- Resumen -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Resumen</h6></div>
             <div class="card-body space-y-3 text-sm">

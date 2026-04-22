@@ -9,7 +9,6 @@
           <div class="card-header"><h6 class="card-title">Datos de la Red Social</h6></div>
           <div class="card-body space-y-4">
 
-            <!-- Plataforma con ícono dinámico -->
             <div>
               <label class="block mb-1.5 text-sm font-medium text-default-800">
                 Plataforma <span class="text-danger">*</span>
@@ -42,7 +41,7 @@
                 <label class="block mb-1.5 text-sm font-medium text-default-800">
                   URL <span class="text-danger">*</span>
                 </label>
-                <input type="url" class="form-input" placeholder="https://facebook.com/alcaldia..." formControlName="url">
+                <input type="url" class="form-input" placeholder="https://facebook.com/cenefco..." formControlName="url">
                 @if (form.get('url')?.invalid && form.get('url')?.touched) {
                   <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
                 }

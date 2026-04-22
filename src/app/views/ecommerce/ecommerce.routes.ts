@@ -123,6 +123,11 @@ import { TiposPrograma }       from "../../tipos-programa/presentation/tipos-pro
 import { TipoProgramaCreate }  from "../../tipos-programa/presentation/tipo-programa-create/tipo-programa-create";
 import { TipoProgramaEdit }    from "../../tipos-programa/presentation/tipo-programa-edit/tipo-programa-edit";
 
+import { Certificados }           from "../../certificados/presentation/certificados/certificados";
+import { CertPlantillas }         from "../../certificados/presentation/cert-plantillas/cert-plantillas";
+import { CertPlantillaCampos }    from "../../certificados/presentation/cert-plantilla-campos/cert-plantilla-campos";
+import { ListaAprobados }         from "../../certificados/presentation/lista-aprobados/lista-aprobados";
+
 export const ECOMMERCE_ROUTES: Routes = [
   { path: 'senefco/asesores', component: Asesores, data: { title: 'Asesores' } },
 
@@ -246,4 +251,10 @@ export const ECOMMERCE_ROUTES: Routes = [
   { path: 'senefco/descuentos-promociones',   component: DescuentosPromociones, data: { title: 'Descuentos y Promociones' } },
   { path: 'senefco/descuento-create',         component: DescuentoCreate,       data: { title: 'Nuevo Descuento' } },
   { path: 'senefco/descuento-edit/:id',       component: DescuentoEdit,         data: { title: 'Editar Descuento' } },
+
+  // Módulo Certificados
+  { path: 'senefco/certificados',                    component: Certificados,        data: { title: 'Certificados' } },
+  { path: 'senefco/cert-plantillas',                 component: CertPlantillas,      data: { title: 'Plantillas de Certificado' } },
+  { path: 'senefco/cert-plantilla-campos/:id',       component: CertPlantillaCampos, data: { title: 'Campos de Plantilla' } },
+  { path: 'senefco/lista-aprobados',                 component: ListaAprobados,      data: { title: 'Lista de Aprobados' } },
 ]

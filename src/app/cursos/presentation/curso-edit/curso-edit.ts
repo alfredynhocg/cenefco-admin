@@ -30,6 +30,8 @@ export class CursoEdit implements OnInit {
   tipos         = signal<TipoCurso[]>([]);
   uploadingImg  = signal(false);
   imgPreview    = signal<string | null>(null);
+  uploadingPdf  = signal(false);
+  pdfName       = signal<string | null>(null);
   private id!: number;
 
   form: FormGroup = this.fb.group({
@@ -43,6 +45,8 @@ export class CursoEdit implements OnInit {
     creditaje:                [''],
     nota:                     [''],
     foto:                     [''],
+    titulo_documento1:        [''],
+    documento1:               [''],
     imagen_banner_url:        [''],
     imagen_alt:               [''],
     url_video:                [''],
@@ -82,6 +86,8 @@ export class CursoEdit implements OnInit {
           creditaje:                curso.creditaje,
           nota:                     curso.nota,
           foto:                     curso.foto,
+          titulo_documento1:        curso.titulo_documento1,
+          documento1:               curso.documento1,
           imagen_banner_url:        curso.imagen_banner_url,
           imagen_alt:               curso.imagen_alt,
           url_video:                curso.url_video,
@@ -98,6 +104,7 @@ export class CursoEdit implements OnInit {
           meta_descripcion:         curso.meta_descripcion,
         });
         if (curso.foto) this.imgPreview.set(curso.foto);
+        if (curso.documento1) this.pdfName.set(curso.titulo_documento1 ?? curso.documento1);
         this.loadingCurso.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -139,9 +146,39 @@ export class CursoEdit implements OnInit {
     this.form.patchValue({ foto: '' });
   }
 
+  onPdfSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploadingPdf.set(true);
+    this.pdfName.set(file.name);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.http.post<{ url: string }>('/api/v1/upload/file', formData).subscribe({
+      next: (res) => {
+        this.form.patchValue({ documento1: res.url });
+        this.uploadingPdf.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.toast.error('Error', extractErrorMessage(err, 'No se pudo subir el documento'));
+        this.pdfName.set(null);
+        this.form.patchValue({ documento1: '' });
+        this.uploadingPdf.set(false);
+        input.value = '';
+      }
+    });
+  }
+
+  removePdf(): void {
+    this.pdfName.set(null);
+    this.form.patchValue({ documento1: '' });
+  }
+
   onSubmit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    if (this.uploadingImg()) return;
+    if (this.uploadingImg() || this.uploadingPdf()) return;
 
     this.submitting.set(true);
     this.cursoService.update(this.id, this.form.value).subscribe({

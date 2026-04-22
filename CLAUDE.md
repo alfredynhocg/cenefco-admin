@@ -7,7 +7,7 @@
 
 ## Qué es este proyecto
 
-**admin_ventas** es el panel de administración del sistema comercial **Alcaldia**.
+**admin_ventas** es el panel de administración del sistema comercial **cenefco**.
 Construido con Angular 18+ usando **standalone components**, **Signals**, y **Zoneless Change Detection**.
 
 Stack: Angular 20 · TypeScript · TailwindCSS · ApexCharts · Angular Signals · Zoneless (`provideZonelessChangeDetection`)
@@ -586,4 +586,4 @@ npx ng build --configuration development 2>&1 | grep -E "ERROR|error TS"
 
 ---
 
-*Proyecto Alcaldia — Sistema Comercial para negocios bolivianos*
+*Proyecto cenefco — Sistema Comercial para negocios bolivianos*

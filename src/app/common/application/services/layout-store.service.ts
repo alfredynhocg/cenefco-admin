@@ -35,7 +35,6 @@ export class LayoutService {
     this.initWindowSize();
   }
 
-  /** Load saved state or default */
   private loadInitialState(): LayoutState {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -45,7 +44,6 @@ export class LayoutService {
     }
   }
 
-  /** Persist state to localStorage */
   private persist() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state()));
     this.layoutStateSubject.next(this.state());
@@ -59,7 +57,6 @@ export class LayoutService {
     return this.state().sidenav.size;
   }
 
-  /** HTML attribute setter */
   private setHtmlAttr(attr: string, value: string) {
     this.html.setAttribute(attr, value);
   }

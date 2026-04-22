@@ -48,4 +48,11 @@ export class CursoService {
   getTipos(): Observable<TipoCursoListResponse> {
     return this.http.get<TipoCursoListResponse>(this.tiposUrl);
   }
+
+  sincronizarMoodle(id: number): Observable<{ id: number; fullname: string; shortname: string }> {
+    return this.http.post<{ id: number; fullname: string; shortname: string }>(
+      `/api/v1/moodle/courses/from-curso/${id}`,
+      {}
+    );
+  }
 }

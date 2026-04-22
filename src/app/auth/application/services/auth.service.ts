@@ -19,8 +19,8 @@ interface LoginResponse {
   user: AuthUser;
 }
 
-const TOKEN_KEY = 'alcaldia_token';
-const USER_KEY  = 'alcaldia_user';
+const TOKEN_KEY = 'cenefco_token';
+const USER_KEY  = 'cenefco_user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

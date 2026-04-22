@@ -30,7 +30,7 @@ export class TitleService {
 
     if (route.snapshot.data['title']) {
       this.titleService.setTitle(
-        route.snapshot.data['title'] + ' | Alcaldia'
+        route.snapshot.data['title'] + ' | cenefco'
       )
     }
   }

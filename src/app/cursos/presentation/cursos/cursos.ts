@@ -60,8 +60,9 @@ export class Cursos {
   get isLoading() { return this.state().type === 'loading'; }
   get error()     { return this.state().type === 'error'; }
 
-  qrCurso   = signal<Curso | null>(null);
-  qrDataUrl = signal<string | null>(null);
+  qrCurso        = signal<Curso | null>(null);
+  qrDataUrl      = signal<string | null>(null);
+  sincronizandoId = signal<number | null>(null);
 
   async abrirQR(curso: Curso): Promise<void> {
     const base = window.location.origin.replace('admin.', '').replace(':4200', '');
@@ -95,6 +96,32 @@ export class Cursos {
 
   onPageChange(page: number): void {
     this.pageIndex.set(page);
+  }
+
+  sincronizarMoodle(curso: Curso): void {
+    Swal.fire({
+      title: '¿Crear en Moodle?',
+      html: `Se creará el curso <b>${curso.nombre_programa}</b> en Moodle.`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#0ea5e9',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, crear',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (!result.isConfirmed) return;
+      this.sincronizandoId.set(curso.id_programa);
+      this.cursoService.sincronizarMoodle(curso.id_programa).subscribe({
+        next: (moodleCurso) => {
+          this.sincronizandoId.set(null);
+          this.toast.success('¡Creado en Moodle!', `Curso creado con ID ${moodleCurso.id}`);
+        },
+        error: () => {
+          this.sincronizandoId.set(null);
+          this.toast.error('Error', 'No se pudo crear el curso en Moodle');
+        }
+      });
+    });
   }
 
   deleteCurso(id: number): void {

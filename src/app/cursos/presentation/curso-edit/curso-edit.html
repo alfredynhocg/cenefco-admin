@@ -10,10 +10,8 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="grid lg:grid-cols-3 grid-cols-1 gap-5">
 
-        <!-- Columna principal -->
         <div class="lg:col-span-2 space-y-5">
 
-          <!-- Información básica -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Información del Curso</h6></div>
             <div class="card-body space-y-4">
@@ -51,7 +49,6 @@
             </div>
           </div>
 
-          <!-- Detalles académicos -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Detalles Académicos</h6></div>
             <div class="card-body space-y-4">
@@ -80,7 +77,6 @@
             </div>
           </div>
 
-          <!-- Imagen principal -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Imagen Principal</h6></div>
             <div class="card-body space-y-4">
@@ -127,7 +123,43 @@
             </div>
           </div>
 
-          <!-- Multimedia y contacto -->
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Documento PDF</h6></div>
+            <div class="card-body space-y-4">
+
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Título del documento</label>
+                <input type="text" class="form-input" placeholder="Ej: Brochure del Curso, Plan de Estudios..." formControlName="titulo_documento1">
+              </div>
+
+              @if (pdfName()) {
+                <div class="flex items-center gap-3 px-4 py-3 bg-primary/5 border border-primary/20 rounded-lg">
+                  @if (uploadingPdf()) {
+                    <div class="size-5 animate-spin text-primary shrink-0"><ng-icon name="lucideLoader"></ng-icon></div>
+                  } @else {
+                    <div class="size-5 text-danger shrink-0"><ng-icon name="lucideFileText"></ng-icon></div>
+                  }
+                  <span class="text-sm text-default-700 truncate grow">{{ pdfName() }}</span>
+                  @if (!uploadingPdf()) {
+                    <button type="button" (click)="removePdf()" class="size-5 text-default-400 hover:text-danger shrink-0" title="Quitar documento">
+                      <ng-icon name="lucideX"></ng-icon>
+                    </button>
+                  }
+                </div>
+              } @else {
+                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-default-300 rounded-lg cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors">
+                  <div class="flex flex-col items-center gap-2 text-default-400">
+                    <div class="size-8"><ng-icon name="lucideFileUp"></ng-icon></div>
+                    <span class="text-sm font-medium">Haz clic para subir el documento</span>
+                    <span class="text-xs text-default-300">Solo PDF — máx. 20 MB</span>
+                  </div>
+                  <input type="file" accept=".pdf" class="hidden" (change)="onPdfSelected($event)">
+                </label>
+              }
+
+            </div>
+          </div>
+
           <div class="card">
             <div class="card-header"><h6 class="card-title">Multimedia y Contacto</h6></div>
             <div class="card-body space-y-4">
@@ -155,7 +187,6 @@
             </div>
           </div>
 
-          <!-- Fechas -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Fechas</h6></div>
             <div class="card-body">
@@ -176,7 +207,6 @@
             </div>
           </div>
 
-          <!-- SEO -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">SEO</h6></div>
             <div class="card-body space-y-4">
@@ -193,17 +223,15 @@
 
         </div>
 
-        <!-- Columna lateral -->
         <div class="space-y-5">
 
-          <!-- Acciones -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Acciones</h6></div>
             <div class="card-body flex flex-col gap-2">
               <button
                 type="submit"
                 class="btn bg-primary text-white w-full"
-                [disabled]="form.invalid || submitting() || uploadingImg()"
+                [disabled]="form.invalid || submitting() || uploadingImg() || uploadingPdf()"
               >
                 @if (submitting()) {
                   <div class="size-4 me-1 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
@@ -218,7 +246,6 @@
             </div>
           </div>
 
-          <!-- Clasificación -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Clasificación</h6></div>
             <div class="card-body space-y-4">
@@ -246,7 +273,6 @@
             </div>
           </div>
 
-          <!-- Publicación -->
           <div class="card">
             <div class="card-header"><h6 class="card-title">Publicación</h6></div>
             <div class="card-body space-y-4">

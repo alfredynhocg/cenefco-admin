@@ -7,12 +7,12 @@ export const currency: CurrencyType = '$'
 export const currentYear = new Date().getFullYear()
 
 export const credits = {
-  website: 'https://alcaldia.in/',
+  website: 'https://cenefco.in/',
   name: 'Themesdesign',
   buyLink: '',
 }
 
-export const appName = 'Alcaldia'
-export const appTitle = 'Alcaldia'
+export const appName = 'cenefco'
+export const appTitle = 'cenefco'
 
 export const basePath: string = ''

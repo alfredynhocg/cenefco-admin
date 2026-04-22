@@ -1,0 +1,136 @@
+<main>
+  <app-page-title title="Lista de Aprobados" subtitle="Certificados" />
+
+  <div class="grid grid-cols-1 gap-5 mb-5">
+
+    @if (showForm()) {
+    <div class="card">
+      <div class="card-header"><h5 class="card-title">Agregar Aprobado Manualmente</h5></div>
+      <div class="card-body">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">ID Apertura (imparte_id) <span class="text-danger">*</span></label>
+            <input type="number" class="form-input" [value]="form().imparte_id ?? ''"
+              (input)="onField('imparte_id', +$any($event.target).value || null)"
+              placeholder="Ej: 123">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">ID Usuario <span class="text-danger">*</span></label>
+            <input type="number" class="form-input" [value]="form().usuario_id ?? ''"
+              (input)="onField('usuario_id', +$any($event.target).value || null)"
+              placeholder="Ej: 456">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Nota final</label>
+            <input type="number" class="form-input" [value]="form().nota_final ?? ''" step="0.01"
+              (input)="onField('nota_final', $any($event.target).value ? +$any($event.target).value : null)"
+              placeholder="Ej: 78.5">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Condición</label>
+            <select class="form-input" [value]="form().condicion"
+              (change)="onField('condicion', $any($event.target).value)">
+              <option value="aprobado">Aprobado</option>
+              <option value="participación">Participación</option>
+            </select>
+          </div>
+          <div class="lg:col-span-2">
+            <label class="block text-sm font-medium mb-1">Observación</label>
+            <input type="text" class="form-input" [value]="form().observacion"
+              (input)="onField('observacion', $any($event.target).value)">
+          </div>
+        </div>
+        <div class="flex items-center gap-3 mt-5">
+          <button class="btn bg-primary text-white flex items-center gap-2"
+            (click)="guardar()" [disabled]="guardando()">
+            @if (guardando()) { <div class="size-4 animate-spin"><ng-icon name="lucideLoader" /></div> }
+            Guardar
+          </button>
+          <button class="btn bg-default-200 text-default-700" (click)="cancelar()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+    }
+
+    <div class="card">
+      <div class="card-header">
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="text-sm text-default-500">Filtrar por imparte_id:</span>
+            <input type="number" class="form-input form-input-sm w-36" placeholder="Ej: 123"
+              (input)="onFiltrarImp($event)">
+          </div>
+          <button class="btn bg-primary text-white flex items-center gap-2 ms-auto" (click)="mostrarForm()">
+            <div class="size-4"><ng-icon name="lucideUserPlus" /></div>
+            Agregar Aprobado
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col">
+        <div class="overflow-x-auto">
+          @if (isLoading) {
+            <div class="flex items-center justify-center py-16 text-default-500 text-sm gap-2">
+              <div class="size-4 animate-spin"><ng-icon name="lucideLoader" /></div> Cargando...
+            </div>
+          } @else if (isError) {
+            <div class="flex items-center justify-center py-16 text-danger text-sm gap-2">
+              <ng-icon name="lucideCircleX" /> Error al cargar datos.
+            </div>
+          } @else {
+            <table class="min-w-full divide-y divide-default-200">
+              <thead class="bg-default-150">
+                <tr class="text-sm font-normal text-default-700">
+                  <th class="px-3.5 py-3 text-start">ID</th>
+                  <th class="px-3.5 py-3 text-start">imparte_id</th>
+                  <th class="px-3.5 py-3 text-start">usuario_id</th>
+                  <th class="px-3.5 py-3 text-start">Condición</th>
+                  <th class="px-3.5 py-3 text-start">Nota</th>
+                  <th class="px-3.5 py-3 text-start">Estado Certificado</th>
+                  <th class="px-3.5 py-3 text-start">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-default-200">
+                @for (item of aprobados; track item.id) {
+                  <tr class="text-default-800 font-normal hover:bg-default-50">
+                    <td class="px-3.5 py-2.5 text-sm text-primary font-medium">{{ item.id }}</td>
+                    <td class="px-3.5 py-2.5 text-sm">{{ item.imparte_id }}</td>
+                    <td class="px-3.5 py-2.5 text-sm">{{ item.usuario_id }}</td>
+                    <td class="px-3.5 py-2.5">
+                      <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium capitalize"
+                        [class]="condicionBadge(item.condicion)">{{ item.condicion }}</span>
+                    </td>
+                    <td class="px-3.5 py-2.5 text-sm text-default-500">{{ item.nota_final ?? '—' }}</td>
+                    <td class="px-3.5 py-2.5">
+                      <span class="inline-flex items-center py-0.5 px-2.5 rounded text-xs font-medium capitalize"
+                        [class]="estadoCertBadge(item.estado_certificado)">{{ item.estado_certificado }}</span>
+                    </td>
+                    <td class="px-3.5 py-2.5">
+                      <button class="btn size-7.5 bg-danger/10 hover:bg-danger text-danger hover:text-white"
+                        (click)="deleteAprobado(item.id)">
+                        <div class="size-4"><ng-icon name="lucideTrash2" /></div>
+                      </button>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="7" class="px-3.5 py-12 text-center text-sm text-default-400">
+                      No hay registros. Filtre por imparte_id o agregue manualmente.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+        <div class="card-footer">
+          <p class="text-default-500 text-sm">
+            Mostrando <b>{{ aprobados.length }}</b> de <b>{{ total }}</b> registros
+          </p>
+          <app-pagination [total]="total" [pageSize]="pageSize()" [currentPage]="pageIndex()"
+            (pageChange)="onPageChange($event)" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

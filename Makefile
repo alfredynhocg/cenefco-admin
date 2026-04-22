@@ -137,19 +137,19 @@ nuke: ## Limpia dist/ + node_modules/ (reinstalar después con make install)
 
 docker-build: ## Construye la imagen Docker del frontend
 	@echo "$(GREEN)Construyendo imagen Docker...$(RESET)"
-	docker build -t alcaldia-admin:latest .
+	docker build -t cenefco-admin:latest .
 
 docker-run: ## Ejecuta el contenedor del frontend en puerto 80
 	@echo "$(GREEN)Iniciando contenedor frontend en :80...$(RESET)"
-	docker run -d --name alcaldia_admin -p 80:80 alcaldia-admin:latest
+	docker run -d --name cenefco_admin -p 80:80 cenefco-admin:latest
 
 docker-stop: ## Detiene el contenedor del frontend
 	@echo "$(YELLOW)Deteniendo contenedor frontend...$(RESET)"
-	docker stop alcaldia_admin && docker rm alcaldia_admin
+	docker stop cenefco_admin && docker rm cenefco_admin
 
 docker-logs: ## Ver logs del contenedor
-	docker logs -f alcaldia_admin
+	docker logs -f cenefco_admin
 
 docker-clean: ## Elimina imagen y contenedor del frontend
-	@echo "$(RED)Eliminando imagen alcaldia-admin...$(RESET)"
-	docker rmi alcaldia-admin:latest 2>/dev/null || true
+	@echo "$(RED)Eliminando imagen cenefco-admin...$(RESET)"
+	docker rmi cenefco-admin:latest 2>/dev/null || true

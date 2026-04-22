@@ -82,6 +82,18 @@ export class SidebarMenu {
       ]
     },
 
+    { type: 'title', label: 'Certificados' },
+    {
+      type: 'accordion',
+      label: 'Certificados',
+      icon: 'lucideAward',
+      children: [
+        { type: 'item', label: 'Generar Certificados', icon: 'lucideAward',        link: '/senefco/certificados' },
+        { type: 'item', label: 'Plantillas',           icon: 'lucideImage',        link: '/senefco/cert-plantillas' },
+        { type: 'item', label: 'Lista de Aprobados',   icon: 'lucideUsers',        link: '/senefco/lista-aprobados' },
+      ]
+    },
+
     { type: 'title', label: 'Comunicación' },
     { type: 'item', label: 'Mensajes de Contacto', icon: 'lucideMail',     link: '/senefco/mensajes-contacto' },
     { type: 'item', label: 'Suscriptores',          icon: 'lucideUsers',    link: '/senefco/suscriptores' },

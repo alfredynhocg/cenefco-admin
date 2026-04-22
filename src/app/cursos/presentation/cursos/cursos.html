@@ -92,6 +92,20 @@
                             </button>
                             <button
                               type="button"
+                              class="btn size-7.5 bg-sky-100 hover:bg-sky-500 text-sky-600 hover:text-white"
+                              title="Crear en Moodle"
+                              [disabled]="sincronizandoId() === curso.id_programa"
+                              (click)="sincronizarMoodle(curso)">
+                              <div class="size-4">
+                                @if (sincronizandoId() === curso.id_programa) {
+                                  <ng-icon name="lucideLoader" class="animate-spin"></ng-icon>
+                                } @else {
+                                  <ng-icon name="lucideGraduationCap"></ng-icon>
+                                }
+                              </div>
+                            </button>
+                            <button
+                              type="button"
                               class="btn size-7.5 bg-danger/10 hover:bg-danger text-danger hover:text-white"
                               title="Eliminar"
                               (click)="deleteCurso(curso.id_programa)">

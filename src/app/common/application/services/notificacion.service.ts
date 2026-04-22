@@ -31,7 +31,6 @@ export class NotificacionService implements OnDestroy {
     if (this.intervalId || this.connecting) return;
     this.connecting = true;
 
-    // Sincronizar last_id primero y solo entonces iniciar el polling
     this.http.get<{ ventas: VentaNotificacion[] }>(`${this.pollUrl}?last_id=0`).subscribe({
       next: ({ ventas }) => {
         if (ventas?.length > 0) {
@@ -41,7 +40,6 @@ export class NotificacionService implements OnDestroy {
         this.intervalId = setInterval(() => this.poll(), this.intervalMs);
       },
       error: (err: HttpErrorResponse) => {
-        // Si falla la sincronización, iniciar polling de todas formas
         this.connecting = false;
         this.intervalId = setInterval(() => this.poll(), this.intervalMs);
       },

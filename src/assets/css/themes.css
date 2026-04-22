@@ -8,7 +8,7 @@
 
     --color-card:         var(--color-white);
 
-    /* Paleta — tokens del CDN (tokens_alcaldia/dist/tokens.css) */
+    /* Paleta — tokens del CDN (tokens_cenefco/dist/tokens.css) */
     --color-primary:      var(--color-brand-primary);
     --color-secondary:    var(--color-brand-secondary);
     --color-success:      var(--color-success);
