@@ -1,12 +1,12 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
 import { AuthService } from '../../../../auth/application/services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, NgIcon, RouterLink],
+  imports: [FormsModule, NgIcon],
   templateUrl: './login.html',
   styles: `
     @keyframes float-bg {

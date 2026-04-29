@@ -8,10 +8,13 @@ import { CategoriaProgramaService } from '../../application/services/categoria-p
 import { CategoriaProgramaItem } from '../../domain/models/categoria-programa.model';
 import { ToastService } from '../../../common/application/services/toast.service';
 import { extractErrorMessage } from '../../../utils/http-error';
+import { CategoriaCampos } from '../categoria-campos/categoria-campos';
+
+type Tab = 'info' | 'campos';
 
 @Component({
   selector: 'app-categoria-programa-edit',
-  imports: [NgIcon, PageTitle, RouterLink, ReactiveFormsModule],
+  imports: [NgIcon, PageTitle, RouterLink, ReactiveFormsModule, CategoriaCampos],
   templateUrl: './categoria-programa-edit.html',
   styles: ``
 })
@@ -22,9 +25,10 @@ export class CategoriaProgramaEdit implements OnInit {
   private router  = inject(Router);
   private route   = inject(ActivatedRoute);
 
-  submitting = signal(false);
-  loading    = signal(true);
-  private id!: number;
+  submitting  = signal(false);
+  loading     = signal(true);
+  activeTab   = signal<Tab>('info');
+  categoriaId = signal(0);
 
   form = this.fb.group({
     nombre:           ['', [Validators.required, Validators.maxLength(200)]],
@@ -39,8 +43,10 @@ export class CategoriaProgramaEdit implements OnInit {
   });
 
   ngOnInit(): void {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    this.service.getById(this.id).subscribe({
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.categoriaId.set(id);
+
+    this.service.getById(id).subscribe({
       next: (item) => {
         this.form.patchValue({
           nombre:           item.nombre,
@@ -62,16 +68,20 @@ export class CategoriaProgramaEdit implements OnInit {
     });
   }
 
+  setTab(tab: Tab): void {
+    this.activeTab.set(tab);
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.submitting.set(true);
-    this.service.update(this.id, this.form.value as Partial<CategoriaProgramaItem>).subscribe({
+    this.service.update(this.categoriaId(), this.form.value as Partial<CategoriaProgramaItem>).subscribe({
       next: () => {
         this.toast.success('¡Actualizada!', 'Categoría actualizada correctamente');
-        this.router.navigate(['/senefco/categorias-programa']);
+        this.submitting.set(false);
       },
       error: (err: HttpErrorResponse) => {
         this.toast.error('Error', extractErrorMessage(err, 'No se pudo actualizar la categoría'));

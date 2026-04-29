@@ -1,0 +1,219 @@
+<div class="space-y-4">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h6 class="text-sm font-semibold text-default-800">Campos del formulario de inscripción</h6>
+      <p class="text-xs text-default-400 mt-0.5">Estos campos se mostrarán al usuario cuando se inscriba a un programa de esta categoría.</p>
+    </div>
+    @if (!mostrarForm()) {
+      <button type="button" (click)="abrirNuevo()" class="btn bg-primary text-white btn-sm flex items-center gap-1.5">
+        <div class="size-4"><ng-icon name="lucidePlus"></ng-icon></div>
+        Agregar campo
+      </button>
+    }
+  </div>
+
+  <!-- Formulario add/edit -->
+  @if (mostrarForm()) {
+    <div class="border border-primary/30 rounded-lg bg-primary/5 p-4 space-y-4">
+      <h6 class="text-sm font-semibold text-default-800">
+        {{ editandoId() ? 'Editar campo' : 'Nuevo campo' }}
+      </h6>
+
+      <form [formGroup]="form" class="space-y-3">
+
+        <div class="grid sm:grid-cols-2 grid-cols-1 gap-3">
+          <div>
+            <label class="block mb-1 text-xs font-medium text-default-700">
+              Nombre interno <span class="text-danger">*</span>
+              <span class="text-default-400 font-normal ms-1">(solo letras, números y _)</span>
+            </label>
+            <input
+              type="text"
+              class="form-input text-sm"
+              placeholder="ej: archivo_cedula"
+              formControlName="nombre_campo"
+            >
+            @if (form.get('nombre_campo')?.invalid && form.get('nombre_campo')?.touched) {
+              <p class="mt-1 text-danger text-xs">
+                @if (form.get('nombre_campo')?.errors?.['pattern']) { Solo minúsculas, números y guión bajo }
+                @else { Este campo es requerido }
+              </p>
+            }
+          </div>
+
+          <div>
+            <label class="block mb-1 text-xs font-medium text-default-700">Etiqueta visible <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-input text-sm"
+              placeholder="ej: Carnet de identidad (PDF)"
+              formControlName="etiqueta"
+            >
+            @if (form.get('etiqueta')?.invalid && form.get('etiqueta')?.touched) {
+              <p class="mt-1 text-danger text-xs">Este campo es requerido</p>
+            }
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 grid-cols-1 gap-3">
+          <div>
+            <label class="block mb-1 text-xs font-medium text-default-700">Tipo de campo <span class="text-danger">*</span></label>
+            <select class="form-input text-sm" formControlName="tipo_campo">
+              @for (t of tiposCampo; track t.value) {
+                <option [value]="t.value">{{ t.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div>
+            <label class="block mb-1 text-xs font-medium text-default-700">Texto de ayuda</label>
+            <input type="text" class="form-input text-sm" placeholder="Ej: Solo archivos PDF, máx. 5 MB" formControlName="ayuda">
+          </div>
+        </div>
+
+        <!-- Opciones para select -->
+        @if (esSelect) {
+          <div>
+            <label class="block mb-1 text-xs font-medium text-default-700">
+              Opciones <span class="text-default-400 font-normal">(una por línea)</span>
+            </label>
+            <textarea
+              class="form-input text-sm font-mono"
+              rows="4"
+              placeholder="Licenciatura&#10;Maestría&#10;Doctorado"
+              formControlName="opciones_raw"
+            ></textarea>
+          </div>
+        }
+
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" formControlName="requerido" class="size-4 rounded text-primary border-default-300 cursor-pointer">
+            <span class="text-sm text-default-700">Requerido</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" formControlName="activo" class="size-4 rounded text-primary border-default-300 cursor-pointer">
+            <span class="text-sm text-default-700">Activo</span>
+          </label>
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button
+            type="button"
+            (click)="guardar()"
+            [disabled]="saving()"
+            class="btn bg-primary text-white btn-sm flex items-center gap-1.5"
+          >
+            @if (saving()) {
+              <div class="size-4 animate-spin"><ng-icon name="lucideLoader"></ng-icon></div>
+              Guardando...
+            } @else {
+              <div class="size-4"><ng-icon name="lucideSave"></ng-icon></div>
+              Guardar
+            }
+          </button>
+          <button type="button" (click)="cancelar()" class="btn border border-default-300 text-default-600 btn-sm">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  }
+
+  <!-- Lista de campos -->
+  @if (loading()) {
+    <div class="flex items-center justify-center py-8 text-default-400">
+      <div class="size-5 animate-spin me-2"><ng-icon name="lucideLoader"></ng-icon></div>
+      Cargando campos...
+    </div>
+  } @else if (campos().length === 0 && !mostrarForm()) {
+    <div class="text-center py-10 text-default-400">
+      <div class="size-10 mx-auto mb-3"><ng-icon name="lucideLayoutList"></ng-icon></div>
+      <p class="text-sm">No hay campos configurados para esta categoría.</p>
+      <p class="text-xs mt-1">Agrega campos para personalizar el formulario de inscripción.</p>
+    </div>
+  } @else if (campos().length > 0) {
+    <div class="space-y-2">
+      @for (campo of campos(); track campo.id; let i = $index; let last = $last) {
+        <div class="flex items-center gap-3 p-3 rounded-lg border"
+          [class]="campo.activo ? 'border-default-200 bg-white' : 'border-default-100 bg-default-50 opacity-60'"
+        >
+          <!-- Icono tipo -->
+          <div class="size-8 rounded-md flex items-center justify-center shrink-0"
+            [class]="campo.activo ? 'bg-primary/10 text-primary' : 'bg-default-200 text-default-400'"
+          >
+            <div class="size-4"><ng-icon [name]="iconoTipo(campo.tipo_campo)"></ng-icon></div>
+          </div>
+
+          <!-- Info -->
+          <div class="grow min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="text-sm font-medium text-default-800 truncate">{{ campo.etiqueta }}</span>
+              @if (campo.requerido) {
+                <span class="text-xs px-1.5 py-0.5 rounded bg-danger/10 text-danger font-medium">Requerido</span>
+              }
+              @if (!campo.activo) {
+                <span class="text-xs px-1.5 py-0.5 rounded bg-default-200 text-default-500">Inactivo</span>
+              }
+            </div>
+            <div class="flex items-center gap-2 mt-0.5">
+              <span class="text-xs text-default-400 font-mono">{{ campo.nombre_campo }}</span>
+              <span class="text-default-200">·</span>
+              <span class="text-xs text-default-500">{{ etiquetaTipo(campo.tipo_campo) }}</span>
+              @if (campo.ayuda) {
+                <span class="text-default-200">·</span>
+                <span class="text-xs text-default-400 italic truncate max-w-48">{{ campo.ayuda }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Acciones orden -->
+          <div class="flex flex-col gap-0.5 shrink-0">
+            <button
+              type="button"
+              (click)="moverArriba(i)"
+              [disabled]="i === 0"
+              class="size-6 flex items-center justify-center rounded text-default-400 hover:text-primary hover:bg-primary/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Subir"
+            >
+              <div class="size-3.5"><ng-icon name="lucideChevronUp"></ng-icon></div>
+            </button>
+            <button
+              type="button"
+              (click)="moverAbajo(i)"
+              [disabled]="last"
+              class="size-6 flex items-center justify-center rounded text-default-400 hover:text-primary hover:bg-primary/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Bajar"
+            >
+              <div class="size-3.5"><ng-icon name="lucideChevronDown"></ng-icon></div>
+            </button>
+          </div>
+
+          <!-- Editar / Eliminar -->
+          <div class="flex items-center gap-1 shrink-0">
+            <button
+              type="button"
+              (click)="abrirEditar(campo)"
+              class="size-8 flex items-center justify-center rounded text-default-400 hover:text-primary hover:bg-primary/10"
+              title="Editar"
+            >
+              <div class="size-4"><ng-icon name="lucidePencil"></ng-icon></div>
+            </button>
+            <button
+              type="button"
+              (click)="eliminar(campo)"
+              class="size-8 flex items-center justify-center rounded text-default-400 hover:text-danger hover:bg-danger/10"
+              title="Eliminar"
+            >
+              <div class="size-4"><ng-icon name="lucideTrash2"></ng-icon></div>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

@@ -1,7 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CategoriaProgramaItem, CategoriaProgramaListResponse, CategoriaProgramaListParams } from '../../domain/models/categoria-programa.model';
+import { map } from 'rxjs/operators';
+import {
+  CategoriaCampo,
+  CategoriaCampoListResponse,
+  CreateCategoriaCampoPayload,
+  CategoriaProgramaItem,
+  CategoriaProgramaListResponse,
+  CategoriaProgramaListParams,
+} from '../../domain/models/categoria-programa.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriaProgramaService {
@@ -30,5 +38,27 @@ export class CategoriaProgramaService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getCampos(categoriaId: number): Observable<CategoriaCampo[]> {
+    return this.http
+      .get<CategoriaCampoListResponse>(`${this.baseUrl}/${categoriaId}/campos`)
+      .pipe(map(r => r.data));
+  }
+
+  createCampo(categoriaId: number, payload: CreateCategoriaCampoPayload): Observable<CategoriaCampo> {
+    return this.http.post<CategoriaCampo>(`${this.baseUrl}/${categoriaId}/campos`, payload);
+  }
+
+  updateCampo(categoriaId: number, campoId: number, payload: Partial<CreateCategoriaCampoPayload>): Observable<CategoriaCampo> {
+    return this.http.put<CategoriaCampo>(`${this.baseUrl}/${categoriaId}/campos/${campoId}`, payload);
+  }
+
+  deleteCampo(categoriaId: number, campoId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${categoriaId}/campos/${campoId}`);
+  }
+
+  reorderCampos(categoriaId: number, items: { id: number; orden: number }[]): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${categoriaId}/campos/reorder`, { items });
   }
 }

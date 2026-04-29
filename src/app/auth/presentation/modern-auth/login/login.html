@@ -11,7 +11,7 @@
 
     <div class="md:hidden relative z-10 flex flex-col items-center justify-center pt-14 pb-8">
         <div class="size-16 mb-3">
-            <img src="assets/images/cenefco.png" alt="CENEFCO" class="w-full h-full object-contain">
+            <img src="assets/images/cenefco.png" alt="CENEFCO" class="w-full h-full object-contain animate-pulse">
         </div>
         <p class="text-white/70 text-sm">Centro de Formación Continua</p>
     </div>
@@ -22,7 +22,7 @@
             <div class="my-auto">
                 <div class="mb-8">
                     <div class="flex justify-center mb-4">
-                      <img src="assets/images/cenefco.png" alt="CENEFCO" class="h-35 object-contain">
+                      <img src="assets/images/cenefco.png" alt="CENEFCO" class="h-35 object-contain animate-pulse">
                     </div>
                     <h2 class="text-2xl font-bold text-white">Panel de Administración</h2>
                     <p class="text-sm text-white/60 mt-1">Ingresa tus credenciales para continuar</p>
@@ -62,11 +62,11 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end mb-2">
+                    <!-- <div class="flex justify-end mb-2">
                         <a routerLink="/auth-modern/reset-password" class="text-sm text-white/70 hover:text-white hover:underline">
                             ¿Olvidaste tu contraseña?
                         </a>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn bg-primary text-white w-full" [disabled]="loading()">
                         @if (loading()) {
@@ -93,7 +93,7 @@
         <div class="text-center">
             <div class="mb-10">
                 <div class="flex justify-center mb-5">
-                    <img src="assets/images/cenefco.png" alt="CENEFCO" class="h-35 object-contain">
+                    <img src="assets/images/cenefco.png" alt="CENEFCO" class="h-35 object-contain animate-pulse">
                 </div>
                 <p class="text-white/70 text-base">Gestión académica de cursos, diplomados y programas</p>
             </div>
