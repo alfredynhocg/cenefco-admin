@@ -137,5 +137,5 @@ export class CertPlantillas {
     });
   }
 
-  readonly storageBase = 'http://localhost:8000';
+  readonly storageBase = '';
 }

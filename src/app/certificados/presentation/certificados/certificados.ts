@@ -134,5 +134,5 @@ export class Certificados {
     return archivoUrl.replace(/\.pdf$/, '_preview.jpg');
   }
 
-  readonly storageBase = 'http://localhost:8000';
+  readonly storageBase = '';
 }
