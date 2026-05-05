@@ -8,10 +8,13 @@ import { CategoriaCurso, TipoCurso } from '../../domain/models/curso.model';
 import { PageTitle } from '../../../common/components/page-title/page-title';
 import { ToastService } from '../../../common/application/services/toast.service';
 import { extractErrorMessage } from '../../../utils/http-error';
+import { CursoImagenes } from '../../../common/components/curso-imagenes/curso-imagenes';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-curso-edit',
-  imports: [ReactiveFormsModule, RouterLink, NgIcon, PageTitle],
+  imports: [ReactiveFormsModule, RouterLink, NgIcon, PageTitle, CursoImagenes, CKEditorModule],
   templateUrl: './curso-edit.html',
   styles: ``
 })
@@ -24,7 +27,10 @@ export class CursoEdit implements OnInit {
 
   private http   = inject(HttpClient);
 
-  submitting    = signal(false);
+  submitting      = signal(false);
+  Editor          = ClassicEditor as any;
+  private ckEditor: any = null;
+  onEditorReady(editor: any) { this.ckEditor = editor; }
   loadingCurso  = signal(true);
   categorias    = signal<CategoriaCurso[]>([]);
   tipos         = signal<TipoCurso[]>([]);
@@ -51,6 +57,8 @@ export class CursoEdit implements OnInit {
     imagen_alt:               [''],
     url_video:                [''],
     url_whatsapp:             [''],
+    url_whatsapp2:            [''],
+    imagenes:                 [[] as string[]],
     inicio_actividades:       [''],
     finalizacion_actividades: [''],
     inicio_inscripciones:     [''],
@@ -61,6 +69,7 @@ export class CursoEdit implements OnInit {
     orden:                    [0],
     meta_titulo:              ['', [Validators.maxLength(300)]],
     meta_descripcion:         ['', [Validators.maxLength(500)]],
+    mensaje_exito:            [''],
   });
 
   ngOnInit(): void {
@@ -92,6 +101,8 @@ export class CursoEdit implements OnInit {
           imagen_alt:               curso.imagen_alt,
           url_video:                curso.url_video,
           url_whatsapp:             curso.url_whatsapp,
+          url_whatsapp2:            curso.url_whatsapp2,
+          imagenes:                 Array.isArray(curso.imagenes) ? curso.imagenes : (typeof curso.imagenes === 'string' ? JSON.parse(curso.imagenes) : []),
           inicio_actividades:       curso.inicio_actividades,
           finalizacion_actividades: curso.finalizacion_actividades,
           inicio_inscripciones:     curso.inicio_inscripciones,
@@ -102,6 +113,7 @@ export class CursoEdit implements OnInit {
           orden:                    curso.orden,
           meta_titulo:              curso.meta_titulo,
           meta_descripcion:         curso.meta_descripcion,
+          mensaje_exito:            curso.mensaje_exito,
         });
         if (curso.foto) this.imgPreview.set(curso.foto);
         if (curso.documento1) this.pdfName.set(curso.titulo_documento1 ?? curso.documento1);
@@ -179,6 +191,7 @@ export class CursoEdit implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     if (this.uploadingImg() || this.uploadingPdf()) return;
+    if (this.ckEditor) this.form.get('mensaje_exito')?.setValue(this.ckEditor.getData());
 
     this.submitting.set(true);
     this.cursoService.update(this.id, this.form.value).subscribe({

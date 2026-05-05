@@ -8,10 +8,13 @@ import { CategoriaCurso, TipoCurso } from '../../domain/models/curso.model';
 import { PageTitle } from '../../../common/components/page-title/page-title';
 import { ToastService } from '../../../common/application/services/toast.service';
 import { extractErrorMessage } from '../../../utils/http-error';
+import { CursoImagenes } from '../../../common/components/curso-imagenes/curso-imagenes';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 @Component({
   selector: 'app-curso-create',
-  imports: [ReactiveFormsModule, RouterLink, NgIcon, PageTitle],
+  imports: [ReactiveFormsModule, RouterLink, NgIcon, PageTitle, CursoImagenes, CKEditorModule],
   templateUrl: './curso-create.html',
   styles: ``
 })
@@ -22,7 +25,10 @@ export class CursoCreate {
   private fb           = inject(FormBuilder);
   private http         = inject(HttpClient);
 
-  submitting    = signal(false);
+  submitting      = signal(false);
+  Editor          = ClassicEditor as any;
+  private ckEditor: any = null;
+  onEditorReady(editor: any) { this.ckEditor = editor; }
   categorias    = signal<CategoriaCurso[]>([]);
   tipos         = signal<TipoCurso[]>([]);
   uploadingImg  = signal(false);
@@ -47,6 +53,8 @@ export class CursoCreate {
     imagen_alt:               [''],
     url_video:                [''],
     url_whatsapp:             [''],
+    url_whatsapp2:            [''],
+    imagenes:                 [[] as string[]],
     inicio_actividades:       [''],
     finalizacion_actividades: [''],
     inicio_inscripciones:     [''],
@@ -57,6 +65,7 @@ export class CursoCreate {
     orden:                    [0],
     meta_titulo:              ['', [Validators.maxLength(300)]],
     meta_descripcion:         ['', [Validators.maxLength(500)]],
+    mensaje_exito:            [''],
   });
 
   constructor() {
@@ -133,6 +142,7 @@ export class CursoCreate {
   onSubmit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     if (this.uploadingImg() || this.uploadingPdf()) return;
+    if (this.ckEditor) this.form.get('mensaje_exito')?.setValue(this.ckEditor.getData());
 
     this.submitting.set(true);
     this.cursoService.create(this.form.value).subscribe({

@@ -12,6 +12,8 @@ export interface Curso {
   nota:                     string | null;
   url_video:                string | null;
   url_whatsapp:             string | null;
+  url_whatsapp2:            string | null;
+  imagenes:                 string[] | null;
   foto:                     string | null;
   titulo_documento1:        string | null;
   documento1:               string | null;
@@ -30,6 +32,7 @@ export interface Curso {
   orden:                    number;
   meta_titulo:              string | null;
   meta_descripcion:         string | null;
+  mensaje_exito:            string | null;
   fecha_publicacion:        string | null;
   fecha_reg:                string | null;
 }
@@ -73,6 +76,7 @@ export interface CreateCursoPayload {
   orden?:                   number;
   meta_titulo?:             string | null;
   meta_descripcion?:        string | null;
+  mensaje_exito?:           string | null;
 }
 
 export interface CategoriaCurso {

@@ -175,7 +175,7 @@
               </div>
 
               <div>
-                <label class="block mb-1.5 text-sm font-medium text-default-800">Enlace Grupo WhatsApp</label>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Enlace Grupo WhatsApp 1</label>
                 <div class="relative">
                   <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <div class="size-4 text-default-400"><ng-icon name="lucideMessageCircle"></ng-icon></div>
@@ -184,6 +184,27 @@
                 </div>
               </div>
 
+              <div>
+                <label class="block mb-1.5 text-sm font-medium text-default-800">Enlace Grupo WhatsApp 2</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <div class="size-4 text-default-400"><ng-icon name="lucideMessageCircle"></ng-icon></div>
+                  </div>
+                  <input type="url" class="form-input ps-9" placeholder="https://chat.whatsapp.com/..." formControlName="url_whatsapp2">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h6 class="card-title">Galería de Imágenes</h6></div>
+            <div class="card-body">
+              <p class="text-sm text-default-500 mb-3">Agrega imágenes adicionales del programa. Aparecerán en la galería del curso.</p>
+              <app-curso-imagenes
+                [urls]="form.get('imagenes')?.value"
+                (urlsChange)="form.get('imagenes')?.setValue($event)">
+              </app-curso-imagenes>
             </div>
           </div>
 
@@ -222,6 +243,7 @@
           </div>
 
         </div>
+
 
         <div class="space-y-5">
 
@@ -304,6 +326,20 @@
 
         </div>
       </div>
+
+      <!-- Mensaje de Éxito — ancho completo -->
+      <div class="card mt-5">
+        <div class="card-header"><h6 class="card-title">Mensaje de Éxito</h6></div>
+        <div class="card-body">
+          <p class="text-sm text-default-500 mb-3">Este mensaje se muestra al estudiante después de enviar la pre-inscripción. Puedes agregar enlaces, botones, imágenes y formato.</p>
+          <ckeditor
+            [editor]="Editor"
+            [data]="form.get('mensaje_exito')?.value ?? ''"
+            (ready)="onEditorReady($event)">
+          </ckeditor>
+        </div>
+      </div>
+
     </form>
   }
 </main>

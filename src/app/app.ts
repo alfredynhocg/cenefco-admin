@@ -6,11 +6,12 @@ import * as tablerIconsFill from '@ng-icons/tabler-icons/fill';
 import {  provideIcons } from '@ng-icons/core';
 import { TitleService } from './common/application/services/title.service';
 import { ToastContainer } from './common/components/toast-container/toast-container';
+import { PageLoader } from './common/components/page-loader/page-loader';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastContainer],
+  imports: [RouterOutlet, ToastContainer, PageLoader],
   templateUrl: './app.html',
   styleUrl: './app.scss',
    providers: [provideIcons({...LucideIcons,...tablerIcons, ...tablerIconsFill})],

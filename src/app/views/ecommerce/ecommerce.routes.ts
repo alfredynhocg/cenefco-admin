@@ -111,6 +111,44 @@ import { Redirecciones }     from "../../redirecciones/presentation/redireccione
 import { RedireccionCreate } from "../../redirecciones/presentation/redireccion-create/redireccion-create";
 import { RedireccionEdit }   from "../../redirecciones/presentation/redireccion-edit/redireccion-edit";
 
+// Fase 1 — Contenido Web
+import { Articulos }      from "../../articulos/presentation/articulos/articulos";
+import { ArticuloCreate } from "../../articulos/presentation/articulo-create/articulo-create";
+import { ArticuloEdit }   from "../../articulos/presentation/articulo-edit/articulo-edit";
+
+// Fase 2 — Cartas y Documentos
+import { CartasModelo }     from "../../cartas-modelo/presentation/cartas-modelo/cartas-modelo";
+import { CartaModeloCreate } from "../../cartas-modelo/presentation/carta-modelo-create/carta-modelo-create";
+import { CartaModeloEdit }   from "../../cartas-modelo/presentation/carta-modelo-edit/carta-modelo-edit";
+
+import { Cartas }      from "../../cartas/presentation/cartas/cartas";
+import { CartaCreate } from "../../cartas/presentation/carta-create/carta-create";
+import { CartaEdit }   from "../../cartas/presentation/carta-edit/carta-edit";
+
+import { CartasGeneradas }       from "../../cartas-generadas/presentation/cartas-generadas/cartas-generadas";
+import { CartaGeneradaCreate }   from "../../cartas-generadas/presentation/carta-generada-create/carta-generada-create";
+import { CartaGeneradaDetail }   from "../../cartas-generadas/presentation/carta-generada-detail/carta-generada-detail";
+
+import { Fotos }      from "../../fotos/presentation/fotos/fotos";
+import { FotoCreate } from "../../fotos/presentation/foto-create/foto-create";
+import { FotoEdit }   from "../../fotos/presentation/foto-edit/foto-edit";
+
+import { WhatsappGrupos }      from "../../whatsapp-grupos/presentation/whatsapp-grupos/whatsapp-grupos";
+import { WhatsappGrupoCreate } from "../../whatsapp-grupos/presentation/whatsapp-grupo-create/whatsapp-grupo-create";
+import { WhatsappGrupoEdit }   from "../../whatsapp-grupos/presentation/whatsapp-grupo-edit/whatsapp-grupo-edit";
+
+import { Permisos }      from "../../permisos/presentation/permisos/permisos";
+import { PermisoCreate } from "../../permisos/presentation/permiso-create/permiso-create";
+import { PermisoEdit }   from "../../permisos/presentation/permiso-edit/permiso-edit";
+
+import { Boletines }     from "../../boletines/presentation/boletines/boletines";
+import { BoletinCreate } from "../../boletines/presentation/boletin-create/boletin-create";
+import { BoletinEdit }   from "../../boletines/presentation/boletin-edit/boletin-edit";
+
+import { Ayudas }     from "../../ayudas/presentation/ayudas/ayudas";
+import { AyudaCreate } from "../../ayudas/presentation/ayuda-create/ayuda-create";
+import { AyudaEdit }   from "../../ayudas/presentation/ayuda-edit/ayuda-edit";
+
 import { DocentesPerfil }    from "../../docentes-perfil/presentation/docentes-perfil/docentes-perfil";
 import { DocentePerfilCreate } from "../../docentes-perfil/presentation/docente-perfil-create/docente-perfil-create";
 import { DocentePerfilEdit }   from "../../docentes-perfil/presentation/docente-perfil-edit/docente-perfil-edit";
@@ -251,6 +289,44 @@ export const ECOMMERCE_ROUTES: Routes = [
   { path: 'senefco/descuentos-promociones',   component: DescuentosPromociones, data: { title: 'Descuentos y Promociones' } },
   { path: 'senefco/descuento-create',         component: DescuentoCreate,       data: { title: 'Nuevo Descuento' } },
   { path: 'senefco/descuento-edit/:id',       component: DescuentoEdit,         data: { title: 'Editar Descuento' } },
+
+  // Fase 1 — Contenido Web
+  { path: 'senefco/articulos',         component: Articulos,      data: { title: 'Artículos' } },
+  { path: 'senefco/articulo-create',   component: ArticuloCreate, data: { title: 'Nuevo Artículo' } },
+  { path: 'senefco/articulo-edit/:id', component: ArticuloEdit,   data: { title: 'Editar Artículo' } },
+
+  { path: 'senefco/boletines',         component: Boletines,     data: { title: 'Boletines' } },
+  { path: 'senefco/boletin-create',    component: BoletinCreate, data: { title: 'Nuevo Boletín' } },
+  { path: 'senefco/boletin-edit/:id',  component: BoletinEdit,   data: { title: 'Editar Boletín' } },
+
+  { path: 'senefco/ayudas',            component: Ayudas,      data: { title: 'Ayudas / Soporte' } },
+  { path: 'senefco/ayuda-create',      component: AyudaCreate, data: { title: 'Nueva Ayuda' } },
+  { path: 'senefco/ayuda-edit/:id',    component: AyudaEdit,   data: { title: 'Editar Ayuda' } },
+
+  // Fase 2 — Cartas y Documentos
+  { path: 'senefco/cartas-modelo',             component: CartasModelo,      data: { title: 'Modelos de Cartas' } },
+  { path: 'senefco/carta-modelo-create',       component: CartaModeloCreate, data: { title: 'Nuevo Modelo de Carta' } },
+  { path: 'senefco/carta-modelo-edit/:id',     component: CartaModeloEdit,   data: { title: 'Editar Modelo de Carta' } },
+
+  { path: 'senefco/cartas',                    component: Cartas,      data: { title: 'Cartas' } },
+  { path: 'senefco/carta-create',              component: CartaCreate, data: { title: 'Nueva Carta' } },
+  { path: 'senefco/carta-edit/:id',            component: CartaEdit,   data: { title: 'Editar Carta' } },
+
+  { path: 'senefco/cartas-generadas',          component: CartasGeneradas,     data: { title: 'Cartas Generadas' } },
+  { path: 'senefco/carta-generada-create',     component: CartaGeneradaCreate, data: { title: 'Generar Carta' } },
+  { path: 'senefco/carta-generada-detail/:id', component: CartaGeneradaDetail, data: { title: 'Detalle de Carta Generada' } },
+
+  { path: 'senefco/fotos',            component: Fotos,      data: { title: 'Galería de Fotos' } },
+  { path: 'senefco/foto-create',      component: FotoCreate, data: { title: 'Nueva Foto' } },
+  { path: 'senefco/foto-edit/:id',    component: FotoEdit,   data: { title: 'Editar Foto' } },
+
+  { path: 'senefco/whatsapp-grupos',            component: WhatsappGrupos,      data: { title: 'Grupos de WhatsApp' } },
+  { path: 'senefco/whatsapp-grupo-create',      component: WhatsappGrupoCreate, data: { title: 'Nuevo Grupo WhatsApp' } },
+  { path: 'senefco/whatsapp-grupo-edit/:id',    component: WhatsappGrupoEdit,   data: { title: 'Editar Grupo WhatsApp' } },
+
+  { path: 'senefco/permisos',           component: Permisos,      data: { title: 'Permisos' } },
+  { path: 'senefco/permiso-create',     component: PermisoCreate, data: { title: 'Nuevo Permiso' } },
+  { path: 'senefco/permiso-edit/:id',   component: PermisoEdit,   data: { title: 'Editar Permiso' } },
 
   // Módulo Certificados
   { path: 'senefco/certificados',                    component: Certificados,        data: { title: 'Certificados' } },

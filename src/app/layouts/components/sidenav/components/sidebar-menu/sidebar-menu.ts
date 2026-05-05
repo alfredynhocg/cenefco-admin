@@ -78,6 +78,10 @@ export class SidebarMenu {
         { type: 'item', label: 'Etiquetas',             icon: 'lucideTag',         link: '/senefco/etiquetas' },
         { type: 'item', label: 'Redes Sociales',        icon: 'lucideShare2',      link: '/senefco/redes-sociales' },
         { type: 'item', label: 'Eventos',               icon: 'lucideCalendarDays',link: '/senefco/eventos' },
+        { type: 'item', label: 'Artículos',             icon: 'lucideFileText',    link: '/senefco/articulos' },
+        { type: 'item', label: 'Boletines',             icon: 'lucideNewspaper',   link: '/senefco/boletines' },
+        { type: 'item', label: 'Ayudas / Soporte',      icon: 'lucideLifeBuoy',    link: '/senefco/ayudas' },
+        { type: 'item', label: 'Galería de Fotos',      icon: 'lucideCamera',      link: '/senefco/fotos' },
         { type: 'item', label: 'Configuración del Sitio', icon: 'lucideGlobe',     link: '/senefco/config-sitio' },
       ]
     },
@@ -94,6 +98,18 @@ export class SidebarMenu {
       ]
     },
 
+    { type: 'title', label: 'Cartas' },
+    {
+      type: 'accordion',
+      label: 'Cartas',
+      icon: 'lucideFileSignature',
+      children: [
+        { type: 'item', label: 'Modelos de Cartas',  icon: 'lucideFileText',    link: '/senefco/cartas-modelo' },
+        { type: 'item', label: 'Cartas',             icon: 'lucideMail',        link: '/senefco/cartas' },
+        { type: 'item', label: 'Cartas Generadas',   icon: 'lucideScrollText',  link: '/senefco/cartas-generadas' },
+      ]
+    },
+
     { type: 'title', label: 'Comunicación' },
     { type: 'item', label: 'Mensajes de Contacto', icon: 'lucideMail',     link: '/senefco/mensajes-contacto' },
     { type: 'item', label: 'Suscriptores',          icon: 'lucideUsers',    link: '/senefco/suscriptores' },
@@ -104,6 +120,7 @@ export class SidebarMenu {
       icon: 'lucideMessageCircle',
       children: [
         { type: 'item', label: 'Conversaciones', icon: 'lucideMessageCircle', link: '/senefco/whatsapp-conversaciones' },
+        { type: 'item', label: 'Grupos',          icon: 'lucideUsers2',         link: '/senefco/whatsapp-grupos' },
         { type: 'item', label: 'Asesores',        icon: 'lucideUsers',          link: '/senefco/asesores' },
         { type: 'item', label: 'Enviar Mensaje',  icon: 'lucideSend',          link: '/senefco/whatsapp-enviar' },
         { type: 'item', label: 'Plantillas',      icon: 'lucideFileText',      link: '/senefco/whatsapp-plantillas' },
@@ -119,6 +136,7 @@ export class SidebarMenu {
         { type: 'item', label: 'Usuarios', icon: 'lucideUsers', link: '/senefco/usuarios' },
         { type: 'item', label: 'Nuevo Usuario', icon: 'lucideUserPlus', link: '/senefco/usuario-create' },
         { type: 'item', label: 'Roles', icon: 'lucideUserCog', link: '/senefco/roles' },
+        { type: 'item', label: 'Permisos', icon: 'lucideShieldCheck', link: '/senefco/permisos' },
         { type: 'item', label: 'Configuraciones', icon: 'lucideSettings', link: '/senefco/configuraciones' },
       ]
     },
